@@ -3,3 +3,4 @@
 redis
 oauth2
 django-extensions
+simplejson
