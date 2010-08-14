@@ -46,6 +46,7 @@ class UserDao:
         oauth_token = self._connection.get("user:%s:oauth_token" %(id))
         location = (self._connection.get("user:%s:latitude" %(id)), self._connection.get("user:%s:longitude" %(id)))
         user = User(id=id, screenname=screenname, twitter_id=twitter_id, oauth_token_secret = oauth_token_secret, oauth_token=oauth_token, location=location)
+        return user
         
     def get_user_id(self, screenname):
         if self._connection.exists("user:%s:id" %(screenname)):
