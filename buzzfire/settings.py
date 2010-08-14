@@ -78,4 +78,15 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.sites',
     'django.contrib.messages',
+	
+	# external apps
+	'django_extensions',
+	
+	# buzzfire apps
+	'buzzfire.twitter_app',
+	'buzzfire.bookmark_app',
+	'buzzfire.comment_app',
 )
+
+# Extras
+BUZZFIRE_LOGIN_URL = '/login/'
