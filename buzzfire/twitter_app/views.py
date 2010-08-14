@@ -35,7 +35,12 @@ def login(request):
 	return HttpResponseRedirect(url)
 	
 def logout(request):
-	pass
+	try:
+		del request.session['buzz_user_id']
+	except KeyError:
+		pass
+		
+	return HttpResponseRedirect(settings.BUZZFIRE_HOME_PAGE)
 	
 def auth_user(request):
 	token = oauth.Token(request.session['request_token']['oauth_token'], request.session['request_token']['oauth_token_secret'])
@@ -62,6 +67,8 @@ def auth_user(request):
 		user.oauth_token_secret = access_token['oauth_token_secret']
 		user.oauth_token = oauth_token=access_token['oauth_token']
 		user_dao.save(user)
+		
+	request.session['buzz_user_id'] = user_id
 	
 	# redirect to user homepage
 	return HttpResponse(settings.BUZZFIRE_USER_PAGE)
