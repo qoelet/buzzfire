@@ -15,3 +15,17 @@ def get_redis_conn():
 	conn = redis.Redis(settings.BUZZ_REDIS_HOST, settings.BUZZ_REDIS_PORT)
 	return conn
 	
+
+def convert_to_builtin_type(obj):
+        
+        if(not isinstance(obj, (list, set))):
+                obj = [obj]
+        result=[]
+        for o in obj:
+                d = { 'type':o.__class__.__name__
+                      }
+                d.update(o.__dict__)
+                result.append(d)
+        
+        return result
+

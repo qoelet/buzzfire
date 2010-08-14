@@ -49,10 +49,10 @@ class CommentDao:
 
     def get_owner_comment(self, owner_id):
         if self._connection.exists("user:%s:comments" %(owner_id)):
-            owner_comment_ids = self._connection.smembers("user:%s:comments" %(owner_id))
+            owner_comment_ids = self._connection.lrange("user:%s:comments" %(owner_id),"0", self._connection.llen("user:%s:comments" %(owner_id)))
             owner_comments=[]
             for id in owner_comment_ids:
-                comment = get_comment(id)
+                comment = self.get_comment(id)
                 owner_comments.append(comment)
             return owner_comments
         else:
@@ -60,10 +60,10 @@ class CommentDao:
 
     def get_bookmark_comment(self, bookmark_id):
         if self._connection.exists("bookmark:%s:comments" %(bookmark_id)):
-            bookmark_comment_ids - self._connection.smembers("bookmark:%s:comments" %(bookmark_id))
+            bookmark_comment_ids = self._connection.lrange("bookmark:%s:comments" %(bookmark_id), 0, self._connection.llen("bookmark:%s:comments" %(bookmark_id)))
             bookmark_comments=[]
             for id in bookmark_comment_ids:
-                comment = get_comment(id)
+                comment = self.get_comment(id)
                 bookmark_comments.append(comment)
             return bookmark_comments
         else:
