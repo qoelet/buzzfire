@@ -3,6 +3,16 @@ body {
     font-size: 16px;
 }
 
+h1 {
+    color: #ff3f08;
+    font-size: 2.2em;
+}
+
+h2 {
+    color: #F53;
+    font-size: 1.4em;
+}
+
 a:link {
     color: #ff3f08;
     text-decoration: none;
@@ -27,6 +37,50 @@ a:active {
 div#inner_container {
     position:relative;
     margin-top: 100px;
+}
+
+#navigation a:link {
+    color: #FFF;
+    text-decoration:none;
+}
+
+#navigation a:visited {
+    color: #FFF;
+    text-decoration:none;
+}
+
+#navigation a:hover {
+    color: #FCC;
+    text-decoration:none;
+}
+
+#navigation a:active {
+    color: #FCC;
+    text-decoration:none;
+}
+
+div#faq_btn {
+    width: 75px;
+    height: 34px;
+    background-image: url('../images/faq_bg.gif');
+    background-repeat: no-repeat;
+    color: #fff;
+    padding: 5px 0px 5px 10px;
+    font-size: 0.9em;
+}
+
+div#signin_btn {
+    width: 88px;
+    height: 34px;
+    background-image: url('../images/signin_bg.gif');
+    background-repeat: no-repeat;
+    color: #fff;
+    padding: 5px 0px 5px 10px;
+    font-size: 0.9em;
+}
+
+.rightie {
+    float: right;
 }
 
 div#buzzbirdie {
@@ -57,7 +111,6 @@ div#framebox {
 div#contentbox {
     margin-left: 200px;
     margin-top: 50px;
-    height: 500px;
 }
 
 div#infobox {
@@ -158,4 +211,27 @@ div#footer {
 
 div#more {
     text-align: right;
+}
+
+/* tooltip */
+#tooltip{
+	position:absolute;
+	background:#333;
+	padding:2px 5px;
+	color:#FFF;
+	font-size: 0.8em;
+	display:none;
+}	
+
+.borderradius #tooltip{
+	position:absolute;
+	background:#333;
+	padding:5px 10px;
+	color:#FFF;
+	font-size: 0.8em;
+	display:none;
+	
+	-webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
 }

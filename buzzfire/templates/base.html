@@ -13,14 +13,22 @@
     <body>
         <div class="container">
             <div id="inner_container" class="span-22 last">
+                <div id="navigation" class="span-22 last">
+                    <div id="faq_btn" class="rightie">
+                        <a href="/faq/" class="tooltip" title="All you need to know about BuzzFire!">FAQ</a>
+                    </div>
+                    <div id="signin_btn" class="rightie">
+                        <a href="/faq/" class="tooltip" title="You'll be redirected to Twitter to login.">Sign In</a>
+                    </div>
+                </div>
                 <div id="buzzbirdie">
-                    <img src="{{ MEDIA_URL }}images/buzzbirdie.png">
+                    <a class="tooltip" title="churpideedooponydwadash!"><img src="{{ MEDIA_URL }}images/buzzbirdie.png"></a>
                 </div>
                 <div id="buzzfire">
-                    <img src="{{ MEDIA_URL }}images/buzzfire.png">
+                    <a href="/" class="tooltip" title="Back to homepage?"><img src="{{ MEDIA_URL }}images/buzzfire.png"></a>
                 </div>
                 <div id="infobox">
-                    <strong>buzzfire</strong> is a simple app that allows you to search, bookmark and rank your favorite tweets, people and locations on Twitter! learn more...
+                    <strong>buzzfire</strong> is a simple app that allows you to search, bookmark and rank your favorite tweets, people and locations on Twitter!
                 </div>
                 <div id="framebox" class="span-22 last">
                     <div id="contentbox" class="span-16 last">
@@ -29,7 +37,7 @@
                 </div>
                 <div class="span-22 last">
                     <div id="footer">
-                        All rights reserved 2010. Buzzfire is brought to you by Team Blue Tomatoes!
+                        All rights reserved 2010. Buzzfire is brought to you by Team Blue Tomatoes! <a class="tooltip" title="kenny [at] northpole [dot] sg"><img src="{{ MEDIA_URL }}images/email_icon.gif"></a>
                     </div>
                 </div>
             </div>
@@ -48,6 +56,36 @@
             	$('#searchbutton').click(function() {
             	   // do something 
             	});
+            	
+            	var tooltip = function(){	
+                	/* CONFIG */		
+                		xOffset = 10;
+                		yOffset = 20;		
+                		// these 2 variable determine popup's distance from the cursor
+                		// you might want to adjust to get the right result		
+                	/* END CONFIG */		
+                	$("a.tooltip").hover(function(e){											  
+                		this.t = this.title;
+                		this.title = "";									  
+                		$("body").append("<p id='tooltip'>"+ this.t +"</p>");
+                		$("#tooltip")
+                			.css("top",(e.pageY - xOffset) + "px")
+                			.css("left",(e.pageX + yOffset) + "px")
+                			.fadeIn("fast");		
+                    },
+                	function(){
+                		this.title = this.t;		
+                		$("#tooltip").remove();
+                    });	
+                	$("a.tooltip").mousemove(function(e){
+                		$("#tooltip")
+                			.css("top",(e.pageY - xOffset) + "px")
+                			.css("left",(e.pageX + yOffset) + "px");
+                	});			
+                };
+            	
+            	// tooltip
+            	tooltip();
             })
         </script>
     </body>

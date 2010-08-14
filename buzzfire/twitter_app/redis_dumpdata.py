@@ -25,8 +25,6 @@ def dumpdata():
 	# test DAO get
 	test(user_ids)
 		
-	
-		
 def test(user_ids):
 	# user_ids is an array of ids []
 	r = redis.Redis()
