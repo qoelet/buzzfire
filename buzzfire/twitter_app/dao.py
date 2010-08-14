@@ -20,7 +20,7 @@ class UserDao:
             self._connection.set("user:%s:screenname" %(user.id), user.screenname)
             self._connection.set("user:%s:twitter_id" %(user.id), user.twitter_id)
             self._connection.set("user:%s:oauth_token" %(user.id), user.oauth_token)
-            self._connection.set("user:%s:ouath_token_secret" %(user.id), user.oauth_token_secret)
+            self._connection.set("user:%s:oauth_token_secret" %(user.id), user.oauth_token_secret)
             self._connection.set("user:%s:longitude" %(user.id), user.location[1])
             self._connection.set("user:%s:latitude" %(user.id), user.location[0])
             self._connection.sadd("user:members", user.id)
