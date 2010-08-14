@@ -1,0 +1,29 @@
+[
+    {
+        "owner_id":"1",
+        "bookmark_id":"1",
+        "text":"horray"
+        
+    }
+,
+    {
+        "owner_id":"2",
+        "bookmark_id":"2",
+        "text":"horray2"
+        
+    }
+,
+    {
+        "owner_id":"1",
+        "bookmark_id":"1",
+        "text":"horray3"
+        
+    }
+,
+    {
+        "owner_id":"1",
+        "bookmark_id":"1",
+        "text":"horray4"
+        
+    }
+]
