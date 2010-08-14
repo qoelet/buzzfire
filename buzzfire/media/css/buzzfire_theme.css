@@ -3,6 +3,27 @@ body {
     font-size: 16px;
 }
 
+a:link {
+    color: #ff3f08;
+    text-decoration: none;
+    font-weight: bold;
+}
+a:visited {
+    color: #ff3f08;
+    text-decoration: none;
+    font-weight: bold;
+}
+a:hover {
+    color: #999;
+    text-decoration: none;
+    font-weight: bold;
+}
+a:active {
+    color: #ff3f08;
+    text-decoration: none;
+    font-weight: bold;
+}
+
 div#inner_container {
     position:relative;
     margin-top: 100px;
@@ -36,6 +57,33 @@ div#framebox {
 div#contentbox {
     margin-left: 200px;
     margin-top: 50px;
+    height: 500px;
+}
+
+div#infobox {
+    background-color: #333;
+    color: #fff;
+    width: 175px;
+    height: 160px;
+    padding: 10px;
+    position: absolute;
+    left: -40px;
+    top: 240px;
+}
+
+.borderradius div#infobox {
+    background-color: #333;
+    color: #fff;
+    width: 175px;
+    height: 160px;
+    padding: 15px;
+    position: absolute;
+    left: -40px;
+    top: 230px;
+    
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
 }
 
 div#footer {
@@ -43,6 +91,9 @@ div#footer {
     background-color: #db5114;
     text-align: center;
     padding:5px 10px;
+    font-size: 0.8em;
+    font-weight: bold;
+    color: #fff;
 }
 
 .borderradius div#footer {
@@ -50,6 +101,9 @@ div#footer {
     background-color: #db5114;
     text-align: center;
     padding:5px 10px;
+    font-size: 0.8em;
+    font-weight: bold;
+    color: #fff;
     
     -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
@@ -60,8 +114,48 @@ div#footer {
     width: 390px;
     height: 60px;
     border: 1px solid #BBB;
+    font-size: 1.5em;
+    text-align: center;
+}
+
+#searchbutton {
+    margin-top: 15px;
+    margin-left: 5px;
 }
 
 .dim {
     color: #999;
+}
+
+/* top tweets */
+.tweet {
+    margin-bottom: 10px;
+}
+
+.tweet_result {
+    border-bottom: 1px solid #CCC;
+    margin-bottom: 15px;
+}
+
+.fleft {
+    float: left;
+    padding-right: 5px;
+    font-size: 0.9em;
+    color: #666;
+}
+
+.padbottom {
+    margin-top: -3px;
+}
+
+.padright {
+    margin-left: 35px;
+}
+
+.red {
+    color: #f55;
+}
+
+div#more {
+    text-align: right;
 }
