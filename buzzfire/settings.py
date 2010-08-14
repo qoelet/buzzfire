@@ -90,5 +90,6 @@ INSTALLED_APPS = (
 
 # Extras
 BUZZFIRE_LOGIN_URL = '/login/'
+BUZZFIRE_USER_PAGE = '/mybuzz/'
 BUZZ_REDIS_HOST = 'localhost'
 BUZZ_REDIS_PORT  = 6379

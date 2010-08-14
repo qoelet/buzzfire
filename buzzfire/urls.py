@@ -13,6 +13,12 @@ urlpatterns = patterns('',
 	(r'^login/$', 'buzzfire.twitter_app.views.login'),
 	(r'^logout/$', 'buzzfire.twitter_app.views.logout'),
 	
+	# user_page
+	(r'^mybuzz/$', 'buzzfire.twitter_app.views.mybuzz'),
+	
+	# FAQ
+	(r'^faq/$', 'buzzfire.common_pages.faq'),
+	
 	# homepage
 	(r'^$', 'buzzfire.common_pages.homepage'),
 )

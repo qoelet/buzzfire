@@ -13,6 +13,8 @@ REQUEST_TOKEN_URL = "http://twitter.com/oauth/request_token"
 ACCESS_TOKEN_URL = "http://twitter.com/oauth/access_token"
 AUTHORIZE_URL = "http://twitter.com/oauth/authorize"
 
+# AUTH VIEWS
+
 def login(request):
 	consumer = oauth.Consumer(buzz_secrets.CONSUMER_KEY, buzz_secrets.CONSUMER_SECRET)
 	client = oauth.Client(consumer)
@@ -56,10 +58,19 @@ def auth_user(request):
 		user_dao.save(new_user)
 	else:
 		# update existing user
-		pass
+		user = user_dao.get_user(user_id)
+		user.oauth_token_secret = access_token['oauth_token_secret']
+		user.oauth_token = oauth_token=access_token['oauth_token']
+		user_dao.save(user)
 	
 	# redirect to user homepage
-	return
+	return HttpResponse(settings.BUZZFIRE_USER_PAGE)
+	
+def mybuzz(request):
+	# Get user's timeline
+	return render_to_response('mybuzz/homepage.html', {}, context_instance=RequestContext(request))
+	
+# DATA GET VIEWS
 
 def get_timeline(request):
 	auth_status = check_auth(request)
