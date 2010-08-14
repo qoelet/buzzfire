@@ -41,7 +41,7 @@ if DEPLOY == 'LOCAL':
 	# URL that handles the media served from MEDIA_ROOT. Make sure to use a
 	# trailing slash if there is a path component (optional in other cases).
 	# Examples: "http://media.lawrence.com", "http://example.com/media/"
-	MEDIA_URL = '/media/'
+	MEDIA_URL = '/site_media/'
 	TEMPLATE_DIRS = (
 	    os.path.abspath('') + '/templates/',
 	)
@@ -51,11 +51,6 @@ else:
 	TEMPLATE_DIRS = (
 	   os.path.abspath('') + '/templates/',
 	)
-
-# URL prefix for admin media -- CSS, JavaScript and images. Make sure to use a
-# trailing slash.
-# Examples: "http://foo.com/media/", "/media/".
-ADMIN_MEDIA_PREFIX = '/media/'
 
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = '_(%w+hs@vg(orbktzovhc18(s)*ex5@_g)oxe1m&=sxk%a&wgf'

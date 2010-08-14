@@ -6,11 +6,30 @@
         <link rel="stylesheet" href="{{ MEDIA_URL }}css/blueprint/screen.css" type="text/css" media="screen, projection">
         <link rel="stylesheet" href="{{ MEDIA_URL }}css/blueprint/print.css" type="text/css" media="print">	
         <!--[if lt IE 8]><link rel="stylesheet" href="{{ MEDIA_URL }}css/blueprint/ie.css" type="text/css" media="screen, projection"><![endif]-->
+        <link rel="stylesheet" href="{{ MEDIA_URL }}css/buzzfire_theme.css" type="text/css">
         <script type="text/javascript" src="{{ MEDIA_URL }}js/jquery-1.4.2.min.js"></script>
+        <script type="text/javascript" src="{{ MEDIA_URL }}js/modernizr-1.5.min.js"></script>
     </head>
     <body>
         <div class="container">
-        	{% block content %}{% endblock %}
+            <div id="inner_container" class="span-22 last">
+                <div id="buzzbirdie">
+                    <img src="{{ MEDIA_URL }}images/buzzbirdie.png">
+                </div
+                <div id="buzzfire">
+                    <img src="{{ MEDIA_URL }}images/buzzfire.png">
+                </div
+                <div id="framebox" class="span-22 last">
+                    <div id="contentbox">
+                    {% block content %}{% endblock %}
+                    </div>
+                </div>
+                <div class="span-22 last">
+                    <div id="footer">
+                        All rights reserved 2010. Buzzfire is brought to you by Team Blue Tomatoes!
+                    </div>
+                </div>
+            </div>
         </div>
     </body>
 </html>

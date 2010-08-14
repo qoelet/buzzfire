@@ -7,7 +7,7 @@ from buzzfire import settings
 
 urlpatterns = patterns('',
     # temp serves for media
-	(r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.STATIC_DOC_ROOT}),
+	(r'^site_media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.STATIC_DOC_ROOT, 'show_indexes':True}),
 	
 	# homepage
 	(r'^$', 'buzzfire.common_pages.homepage'),
