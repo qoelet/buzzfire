@@ -6,5 +6,3 @@ class User:
         self.oauth_token_secret=oauth_token_secret
         self.oauth_token = oauth_token
         self.location = location
-
-        
