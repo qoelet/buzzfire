@@ -1,0 +1,5 @@
+# pip requirements for the stuff buzzfire runs on
+
+redis
+oauth2
+django-extensions
