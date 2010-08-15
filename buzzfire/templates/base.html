@@ -18,8 +18,11 @@
                         <a href="/faq/" class="tooltip" title="All you need to know about BuzzFire!">FAQ</a>
                     </div>
                     {% if buzz_auth %}
+                    <div id="mybuzz_btn" class="rightie">
+                        <a href="/mybuzz/" class="tooltip" title="Go to your bookmarks and stuff!">Sign Out</a>
+                    </div>
                     <div id="signout_btn" class="rightie">
-                        <a href="/logout/" class="tooltip" title="You'll be redirected to Twitter to login.">Sign Out</a>
+                        <a href="/logout/" class="tooltip" title="Logout from BuzzFire.">Sign Out</a>
                     </div>
                     {% else %}
                     <div id="signin_btn" class="rightie">
