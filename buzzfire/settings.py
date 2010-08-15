@@ -89,7 +89,7 @@ INSTALLED_APPS = (
 )
 
 SESSION_ENGINE='django.contrib.sessions.backends.cache'
-CACHE_BACKEND = 'twittertest.redis_cache.cache://localhost:6379'
+CACHE_BACKEND = 'buzzfire.redis_cache.cache://localhost:6379'
 
 
 # Extras
