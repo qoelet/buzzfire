@@ -31,7 +31,7 @@ def add(request):
             
             if id:
                 bookmark = bookmark_dao.get_bookmark(id)
-                result = json.dumps(bookmark, default=Bookmark.json_encode)
+                result = json.dumps([bookmark], default=Bookmark.json_encode)
                 return HttpResponse(result, content_type = "application/json")
             else:
                 result ='{"status":"error"}'

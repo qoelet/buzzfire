@@ -21,7 +21,7 @@ class Bookmark:
                 tagstr= tagstr[0:len(tagstr)-1]+"]"
             else:
                 tagstr=tagstr+"]"
-            return {"bookmark": r"{'id':'%s', 'owner_id':'%s', 'tweet_id':'%s', 'tweet_txt':'%s', 'tweeter_screenname':'%s', 'location.latitude':'%s', 'location.longitude':'%s', 'created':'%s', 'updated':'%s', 'tags':'%s'}" %(obj.id, obj.owner_id, obj.tweet_id, obj.tweet_txt, obj.tweeter_screenname, obj.location[0], obj.location[1], obj.created.strftime('%Y-%m-%dT%H:%M:%S'), obj.updated.strftime('%Y-%m-%dT%H:%M:%S'), tagstr)}
+            return {"bookmark": {'id': obj.id, 'owner_id':obj.owner_id, 'tweet_id':obj.tweet_id, 'tweet_txt':obj.tweet_txt, 'tweeter_screenname':obj.tweeter_screenname, 'location.latitude':obj.location[0], 'location.longitude':obj.location[1], 'created':obj.created.strftime('%Y-%m-%dT%H:%M:%S'), 'updated':obj.updated.strftime('%Y-%m-%dT%H:%M:%S'), 'tags': obj.tags}} 
         else:
             return {}
 
