@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block title %}
+My Buzz!
+{% endblock %}
+
+
+{% block content %}
+
+{% endblock %}
+
+{% block script %}
+    // Get user timeline
+    $.getJSON('{% url mybuzz_timeline %}', function(data) {
+        $.each(data.items, function(i, item){
+            alert(item);
+        });
+    });
+{% endblock %}
