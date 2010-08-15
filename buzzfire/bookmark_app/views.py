@@ -95,13 +95,12 @@ def untag_bookmark(request, bookmark_id):
     else:
         return HttpResponseRedirect(settings.BUZZFIRE_LOGIN_URL)
     
-def delete_bookmark(request):
+def delete_bookmark(request, bookmark_id):
     oauth_status = check_auth(request)
     if oauth_status:
         conn = get_redis_conn()
         bookmark_dao = BookmarkDao(conn)
         if request.method == 'POST':
-            bookmark_id = request.POST['bookmark_id']
             status = bookmark_dao.delete(bookmark_id)
             if status:
                   return HttpResponse('{"status":"Success"}', content_type = "application/json")
