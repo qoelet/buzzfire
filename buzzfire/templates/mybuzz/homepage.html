@@ -61,7 +61,8 @@ My Buzz!
     // show search
     $('#new_search').click(function(){
         $('#mybuzz_timeline').fadeOut('fast').empty();
-        $('#mybuzz_timeline').append('<p class="dim">Search for a keyword or phrase...</p><div id="searchbox"><input type="text" id="search" style="float:left"></div><div id="searchbutton_box" style="float:left"><a id="searchbutton"><img src="{{ MEDIA_URL }}images/search_btn.gif"></a></div>');
+        $('#mybuzz_timeline').append('<p class="dim">Search for a keyword or phrase...</p><div id="searchbox"><input type="text" id="search" style="float:left"></div><div id="searchbutton_box" style="float:left"><a id="searchbutton"><img src="{{ MEDIA_URL }}images/search_btn.gif"></a></div>').fadeIn('slow');
+        
         // dim other links
         $('#view_latest_tweets img').attr('src','{{ MEDIA_URL }}images/latest_tweets_off.gif');
         $('#view_bookmarks img').attr('src','{{ MEDIA_URL }}images/my_bookmarks_off.gif');
