@@ -11,6 +11,7 @@ def homepage(request):
 		buzz_id = request.session['buzz_user_id']
 	else:
 		buzz_auth = None
+		buzz_id = None
 		
 	return render_to_response('common_pages/homepage.html', {'buzz_auth':buzz_auth, 'buzz_id':buzz_id}, context_instance=RequestContext(request))
 	
