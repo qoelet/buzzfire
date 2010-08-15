@@ -16,9 +16,12 @@ class Bookmark:
         if isinstance(obj, Bookmark):
             tagstr="["
             for tag in obj.tags:
-                tagstr= tagStr+"'"+tag+"',"
-            tagstr= tagstr[0:len(tagstr)-1]+"]"
-            return {"bookmark": r"{'id':'%s', 'owner_id':'%s', 'tweet_id':'%s', 'tweet_txt':'%s', 'tweeter_screenname':'%s', 'location.latitude':'%s', 'location.longitude':'%s', 'created':'%s', 'updated':'%s', 'tags':'%s'}" %(obj.id, obj.owner_id, obj.tweet_id, obj.tweet_txt, obj.tweeter_screenname, location[0], location[1], obj.created.strftime('%Y-%m-%dT%H:%M:%S'), obj.updated.strftime('%Y-%m-%dT%H:%M:%S'), tagstr)}
+                tagstr= tagstr+"'"+tag+"',"
+            if len(obj.tags)>1:
+                tagstr= tagstr[0:len(tagstr)-1]+"]"
+            else:
+                tagstr=tagstr+"]"
+            return {"bookmark": r"{'id':'%s', 'owner_id':'%s', 'tweet_id':'%s', 'tweet_txt':'%s', 'tweeter_screenname':'%s', 'location.latitude':'%s', 'location.longitude':'%s', 'created':'%s', 'updated':'%s', 'tags':'%s'}" %(obj.id, obj.owner_id, obj.tweet_id, obj.tweet_txt, obj.tweeter_screenname, obj.location[0], obj.location[1], obj.created.strftime('%Y-%m-%dT%H:%M:%S'), obj.updated.strftime('%Y-%m-%dT%H:%M:%S'), tagstr)}
         else:
             return {}
 

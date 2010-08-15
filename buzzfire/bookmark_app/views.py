@@ -17,7 +17,7 @@ def add(request):
             owner_id = request.POST['owner_id']
             tweet_id = request.POST['tweet_id']
             tweet_txt = request.POST['tweet_txt']
-            tweet_screenname = request.POST['tweeter_screenname']
+            tweeter_screenname = request.POST['tweeter_screenname']
             if request.POST.has_key('latitude'):
                 latitude = request.POST['latitude']
             else:
@@ -28,12 +28,13 @@ def add(request):
                 longitude =None
             bookmark = Bookmark(owner_id, tweet_id, tweet_txt, tweeter_screenname, location=(latitude, longitude))
             id = bookmark_dao.save(bookmark)
+            
             if id:
                 bookmark = bookmark_dao.get_bookmark(id)
                 result = json.dumps(bookmark, default=Bookmark.json_encode)
                 return HttpResponse(result)
             else:
-                result = ='{"status":"error"}'
+                result ='{"status":"error"}'
                 return HttpResponse(result)
         else:
             return HttpResponse()
