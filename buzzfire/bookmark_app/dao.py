@@ -21,25 +21,28 @@ class BookmarkDao:
         if self.__validate(bookmark):
             if not bookmark.id:
                 bookmark.id = self._connection.get("bookmark:next_id")
-            lastmonth=(bookmark.created - datetime.timedelta(1*365/12)).strftime("%Y-%m")  
-            self._connection.set("bookmark:%s:owner_id" %(bookmark.id), bookmark.owner_id)
-            self._connection.set("bookmark:%s:tweet_id" %(bookmark.id), bookmark.tweet_id)
-            self._connection.set("bookmark:%s:tweet_txt" %(bookmark.id), bookmark.tweet_txt)
-            self._connection.set("bookmark:%s:tweeter_screenname" %(bookmark.id), bookmark.tweeter_screenname)
-            self._connection.set("bookmark:%s:latitude" %(bookmark.id),  bookmark.location[0])
-            self._connection.set("bookmark:%s:longitude" %(bookmark.id), bookmark.location[1])
+            if(not self._connection.sismember("user:%s:bookmark_set_tweet_ids" %(bookmark.owner_id), bookmark.tweet_id)):
+                lastmonth=(bookmark.created - datetime.timedelta(1*365/12)).strftime("%Y-%m")  
+                self._connection.set("bookmark:%s:owner_id" %(bookmark.id), bookmark.owner_id)
+                self._connection.set("bookmark:%s:tweet_id" %(bookmark.id), bookmark.tweet_id)
+                self._connection.set("bookmark:%s:tweet_txt" %(bookmark.id), bookmark.tweet_txt)
+                self._connection.set("bookmark:%s:tweeter_screenname" %(bookmark.id), bookmark.tweeter_screenname)
+                self._connection.set("bookmark:%s:latitude" %(bookmark.id),  bookmark.location[0])
+                self._connection.set("bookmark:%s:longitude" %(bookmark.id), bookmark.location[1])
                            
-            self._connection.set("bookmark:%s:created" %(bookmark.id), bookmark.created.strftime("%Y-%m-%d %H:%M:%S"))
-            self._connection.set("bookmark:%s:updated" %(bookmark.id), bookmark.updated.strftime("%Y-%m-%d %H:%M:%S"))
-            self._connection.rpush("bookmark:bytime:bookmarks", bookmark.id)
-            self._connection.incr("user:%s:%s:total_bookmarks" %(bookmark.owner_id, bookmark.created.strftime("%Y-%m")))
-            self._connection.rpush("user:%s:bookmarks" %(bookmark.owner_id), bookmark.id)
-            self._connection.sadd("user:%s:bookmarks_set" %(bookmark.owner_id), bookmark.id)
-            
-            self._connection.zincrby("bookmark:byscore:bookmarks", bookmark.id, 0.0)
-            self._connection.zincrby("user:%s:byscore:bookmarks", bookmark.id, 0.0)
-            self._connection.incr("bookmark:next_id")
-            return bookmark.id
+                self._connection.set("bookmark:%s:created" %(bookmark.id), bookmark.created.strftime("%Y-%m-%d %H:%M:%S"))
+                self._connection.set("bookmark:%s:updated" %(bookmark.id), bookmark.updated.strftime("%Y-%m-%d %H:%M:%S"))
+                self._connection.rpush("bookmark:bytime:bookmarks", bookmark.id)
+                self._connection.incr("user:%s:%s:total_bookmarks" %(bookmark.owner_id, bookmark.created.strftime("%Y-%m")))
+                self._connection.rpush("user:%s:bookmarks" %(bookmark.owner_id), bookmark.id)
+                self._connection.sadd("user:%s:bookmarks_set" %(bookmark.owner_id), bookmark.id)
+                self._connection.sadd("user:%s:bookmark_set_tweet_ids" %(bookmark.owner_id), bookmark.tweet_id)
+                self._connection.zincrby("bookmark:byscore:bookmarks", bookmark.id, 0.0)
+                self._connection.zincrby("user:%s:byscore:bookmarks", bookmark.id, 0.0)
+                self._connection.incr("bookmark:next_id")
+                return bookmark.id
+            else:
+                return None
         else:
             return None
             
@@ -52,6 +55,8 @@ class BookmarkDao:
         self._connection.zrem("bookmark:byscore:bookmarks", bookmark_id)
         self._connection.lrem("bookmark:bytime:bookmarks", bookmark_id)
         self._connection.lrem("user:%s:bookmarks" %(owner_id), bookmark_id)
+        self._connection.srem("user:%s:bookmarks_set" %(owner_id), bookmark_id)
+        self._connection.srem("user:%s:bookmark_set_tweet_ids" %(owner_id), self._connection.get("bookmark:%s:tweet_id", tweet_id))
         if(self._connection.exists("bookmark:%s:tags" %(bookmark_id))):
             tag_ids = self._connection.smembers("bookmark:%s:tags" %(bookmark_id))
             for id in tag_ids:
