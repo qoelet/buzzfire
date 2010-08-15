@@ -6,7 +6,7 @@ from buzzfire import settings
 
 def check_auth(request):
 	try:
-		user_id = request.session['user_id']
+		user_id = request.session['buzz_user_id']
 		return True
 	except KeyError:
 		return False
