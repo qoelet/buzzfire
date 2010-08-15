@@ -8,7 +8,13 @@ My Buzz!
 {% block content %}
 {% if buzz_auth %}
     <h1>My Buzz</h1>
-    <h2>Latest Tweets</h2>
+    <h2 class="fleft">
+        <img src="{{ MEDIA_URL }}images/latest_tweets.gif">
+    </h2>
+    <h2 class="fleft">
+        <img src="{{ MEDIA_URL }}images/mybookmarks_off.gif">
+    </h2>
+    <div class="clear"></div>
     <div id="mybuzz_timeline">
         <div id="loader">
             <img src="{{ MEDIA_URL }}images/loader.gif">
