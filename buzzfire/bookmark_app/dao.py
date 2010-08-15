@@ -56,7 +56,7 @@ class BookmarkDao:
             tag_ids = self._connection.smembers("bookmark:%s:tags" %(bookmark_id))
             for id in tag_ids:
                 self._connection.srem("tag:%s:bookmarks" %(id), bookmark_id)
-        bookmark_keys = self._connection.keys("bookmark:%s:*" %(bookmark_id)).split()
+        bookmark_keys = self._connection.keys("bookmark:%s:*" %(bookmark_id))
         if(len(bookmark_keys)):
             for key in bookmark_keys:
                 self._connection.delete(key)
