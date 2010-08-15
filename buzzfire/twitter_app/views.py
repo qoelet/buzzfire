@@ -122,8 +122,7 @@ def get_timeline(request):
 		except KeyError:
 				raise Exception('Did not get a proper response')
 				
-		buzz_content = json.JSONEncoder().encode(content)
-		return HttpResponse(buzz_content, content_type = "application/json")
+		return HttpResponse(content, content_type = "application/json")
 	else:
 		return HttpResponseRedirect(settings.BUZZFIRE_LOGIN_URL)
 
