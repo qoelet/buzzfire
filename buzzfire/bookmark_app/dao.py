@@ -63,9 +63,10 @@ class BookmarkDao:
             return False
         
     def delete_bookmarks_user(self, user_id):
-        user_bookmark_ids = self._connection.smembers("user:%s:bookmarks" %(user_id))
-        for id in user_bookmark_ids:
-            self.delete(key)
+        if self._connection.exists("user:%s:bookmarks" %(user_id)):
+            user_bookmark_ids = self._connection.smembers("user:%s:bookmarks" %(user_id))
+            for id in user_bookmark_ids:
+                self.delete(key)
         
 
     def get_bookmark_of_user(self, user_id):
@@ -81,6 +82,7 @@ class BookmarkDao:
 
 
     def get_bookmark(self, bookmark_id):
+        
         owner_id = self._connection.get("bookmark:%s:owner_id" %(bookmark_id))
         tweet_id = self._connection.get("bookmark:%s:tweet_id" %(bookmark_id))
         tweet_txt = self._connection.get("bookmark:%s:tweet_txt" %(bookmark_id))
@@ -88,8 +90,10 @@ class BookmarkDao:
         location = (self._connection.get("bookmark:%s:latitude" %(bookmark_id)), self._connection.get("bookmark:%s:longitude" %(bookmark_id)))
         created = datetime.datetime.strptime(self._connection.get("bookmark:%s:created" %(bookmark_id)),"%Y-%m-%d %H:%M:%S")
         updated = datetime.datetime.strptime(self._connection.get("bookmark:%s:updated" %(bookmark_id)),"%Y-%m-%d %H:%M:%S")
-        tags = self._connection.smember("bookmark:%s:tags" %(bookmark_id))
-        
+        if self._connection.exists("bookmark:%s:tags" %(bookmark_id)):
+            tags = self._connection.smembers("bookmark:%s:tags" %(bookmark_id))
+        else:
+            tags = set()
         bookmark = Bookmark(owner_id=owner_id, tweet_id=tweet_id, tweet_txt=tweet_txt, tweeter_screenname=tweeter_screenname, location=location, created=created, updated=updated, id=bookmark_id, tags=list(tags))
         return bookmark
         
@@ -176,9 +180,10 @@ class BookmarkDao:
         total_liked_bookmark_of_user= int(self._connection.llen("user:%s:likedbookmarks" %(user_id)))
         old_score_of_user = float(total_liked_bookmark_of_user)/total_bookmark_user
         score_of_user =float(total_liked_bookmark_of_user+amount)/(total_bookmark_user)
-        like_bookmark_of_user_ids = self._connection.smembers("user:%s:likes")
-        for id in like_bookmark_of_user_ids:
-            self.update_bookmark_score(user_id, old_score_of_user, score_of_user, bookmark_id)
+        if self._connection.exists("user:%s:likes" %(user_id)):
+            like_bookmark_of_user_ids = self._connection.smembers("user:%s:likes" %(user_id))
+            for id in like_bookmark_of_user_ids:
+                self.update_bookmark_score(user_id, old_score_of_user, score_of_user, bookmark_id)
 
 
     def update_bookmark_score(self, user_id, old_score_of_user,user_new_score, bookmark_id):
