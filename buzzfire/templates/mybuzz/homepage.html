@@ -67,6 +67,71 @@ My Buzz!
         $('#view_latest_tweets img').attr('src','{{ MEDIA_URL }}images/latest_tweets_off.gif');
         $('#view_bookmarks img').attr('src','{{ MEDIA_URL }}images/my_bookmarks_off.gif');
         $('#new_search img').attr('src','{{ MEDIA_URL }}images/my_search.gif');
+        
+        // re-attach handlers
+        $('#searchbutton').hover(function() {
+    		$('#searchbutton img').attr('src', '{{ MEDIA_URL }}images/search_btn_on.gif');
+    	}, function() {
+    		$('#searchbutton img').attr('src', '{{ MEDIA_URL }}images/search_btn.gif');
+    	});
+    	
+    	// add the view
+    	// search twitter
+           $('#searchbutton').click(function() {
+
+               var query_string = $('#search').val();
+               var query_url = "{% url mybuzz_search %}" + "?q=" + query_string;
+
+               $('#mybuzz_timeline').fadeOut('fast').empty();
+               $('#mybuzz_timeline').append('<div id="loader"><img src="{{ MEDIA_URL }}images/loader.gif"></div>').fadeIn('fast');
+
+               function search_twitter(query_url) {
+                   $.getJSON(query_url, function(data) {
+                       $('#loader').fadeOut('fast');
+                       for(tweet in data['results']) {
+                           var form_id = 'bookmark_form_' + tweet;
+                           var bookmark_id = 'bookmark_' + tweet;
+                           var that = this;
+
+                           // append tweet
+
+                           $('#mybuzz_timeline').append('<div class="tweet_result"><div class="tweet">' + data['results'][tweet].text +
+                           '</div>' +
+                           '<div class="tweet_info">' + 
+                           '<div class="fleft"><img src="{{ MEDIA_URL }}images/user_ico.gif"></div>' +
+                           '<div class="fleft padbottom">' + data['results'][tweet].from_user + '</div>' + 
+                           '<div class="fleft padright"><a id="' + bookmark_id  + '"><img src=\"{{ MEDIA_URL }}images/bookmark_ico.png\"></a></div>' + 
+                           '<div class="fleft padbottom red">bookmark me!</div>' +
+                           '<form id="' + form_id + '"' + ' method="post">' +
+                           '<input type="hidden" name="tweet_id" value="' + data['results'][tweet].id + '">' +
+                           '<input type="hidden" name="tweet_txt" value="' + data['results'][tweet].text + '">' +
+                           '<input type="hidden" name="tweeter_screenname" value="' + data['results'][tweet].from_user  + '">' +
+                           '</form>' +
+                           '<div class="clear"></div>'  + 
+                           '</div></div>').fadeIn('slow');
+
+                           function add_handler(bookmark_id, form_id) {
+                               // add post handler
+                               $('#' + bookmark_id).click(function(){
+                                   $.post('{% url mybuzz_add_bookmark %}', $("#" + form_id).serialize(), function(data) {
+                                       alert(data);
+                                   });
+                               });
+
+                               // hover 
+                               $('#' + bookmark_id).hover(function(){
+                                   $('#' + bookmark_id + ' img').attr('src','{{ MEDIA_URL }}images/bookmark_on_ico.png');
+                               }, function() {
+                                   $('#' + bookmark_id + ' img').attr('src','{{ MEDIA_URL }}images/bookmark_ico.png');
+                               });
+                           }
+
+                           add_handler(bookmark_id, form_id);
+                       }
+                   });
+               }
+               search_twitter(query_url);
+           });
     });
     
     // Get user timeline
@@ -159,62 +224,7 @@ My Buzz!
         });
     }
     
-    // search twitter
-    $('#searchbutton').click(function() {
-
-        var query_string = $('#search').val();
-        var query_url = "{% url mybuzz_search %}" + "?q=" + query_string;
-        
-        $('#mybuzz_timeline').fadeOut('fast').empty();
-        $('#mybuzz_timeline').append('<div id="loader"><img src="{{ MEDIA_URL }}images/loader.gif"></div>').fadeIn('fast');
-    
-        function search_twitter(query_url) {
-            $.getJSON(query_url, function(data) {
-                $('#loader').fadeOut('fast');
-                for(tweet in data['results']) {
-                    var form_id = 'bookmark_form_' + tweet;
-                    var bookmark_id = 'bookmark_' + tweet;
-                    var that = this;
-
-                    // append tweet
-
-                    $('#mybuzz_timeline').append('<div class="tweet_result"><div class="tweet">' + data['results'][tweet].text +
-                    '</div>' +
-                    '<div class="tweet_info">' + 
-                    '<div class="fleft"><img src="{{ MEDIA_URL }}images/user_ico.gif"></div>' +
-                    '<div class="fleft padbottom">' + data['results'][tweet].from_user + '</div>' + 
-                    '<div class="fleft padright"><a id="' + bookmark_id  + '"><img src=\"{{ MEDIA_URL }}images/bookmark_ico.png\"></a></div>' + 
-                    '<div class="fleft padbottom red">bookmark me!</div>' +
-                    '<form id="' + form_id + '"' + ' method="post">' +
-                    '<input type="hidden" name="tweet_id" value="' + data['results'][tweet].id + '">' +
-                    '<input type="hidden" name="tweet_txt" value="' + data['results'][tweet].text + '">' +
-                    '<input type="hidden" name="tweeter_screenname" value="' + data['results'][tweet].from_user  + '">' +
-                    '</form>' +
-                    '<div class="clear"></div>'  + 
-                    '</div></div>').fadeIn('slow');
-
-                    function add_handler(bookmark_id, form_id) {
-                        // add post handler
-                        $('#' + bookmark_id).click(function(){
-                            $.post('{% url mybuzz_add_bookmark %}', $("#" + form_id).serialize(), function(data) {
-                                alert(data);
-                            });
-                        });
-
-                        // hover 
-                        $('#' + bookmark_id).hover(function(){
-                            $('#' + bookmark_id + ' img').attr('src','{{ MEDIA_URL }}images/bookmark_on_ico.png');
-                        }, function() {
-                            $('#' + bookmark_id + ' img').attr('src','{{ MEDIA_URL }}images/bookmark_ico.png');
-                        });
-                    }
-
-                    add_handler(bookmark_id, form_id);
-                }
-            });
-        }
-        search_twitter(query_url);
-    });
+   
     // load data
     refresh_data();
     {% endif %}
