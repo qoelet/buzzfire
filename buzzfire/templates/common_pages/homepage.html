@@ -16,8 +16,11 @@ bookmark and rank your favorite tweets today!
 <div id="search_errormsg" class="clear red" style="display:none;">
     Sorry, you need to sign in before you can search and use BuzzFire.
 </div>
+<div id="tweets_nav" class="clear">
+	<div class="fleft"><img src="{{ MEDIA_URL }}images/top_tweets.gif"></div>
+	<div class="fleft"><img src="{{ MEDIA_URL }}images/latest_bookmarks_off.gif"></div>
+</div>
 <div id="top_tweets_box" class="clear">
-    <img src="{{ MEDIA_URL }}images/top_tweets.gif">
     <div id="top_tweets_results">
         {% comment %} top N results will go here {% endcomment %}
         <div class="tweet_result">
@@ -37,6 +40,12 @@ bookmark and rank your favorite tweets today!
         <div id="more"><a href="#" title="Click to view more popular tweets!" class="tooltip">more</a></div>
     </div>
 </div>
+<div id="latest_bookmarks_box" class="clear">
+    <img src="{{ MEDIA_URL }}images/latest_bookmarks.gif">
+    <div id="latest_bookmarks_results">
+		
+    </div>
+</div>
 
 {% endblock %}
 
@@ -45,7 +54,10 @@ bookmark and rank your favorite tweets today!
 	var getbookmarks_url = '{% url latest_bookmarks %}';
 	getbookmarks_url += '?offset=0&length=10';
 	$.getJSON(getbookmarks_url, function(data) {
-		alert('top 10');
+		for(tweet in data) {
+			var form_id;
+            console.log(data[tweet].bookmark.tweet_txt);
+        }
 	});
 	
 	// search 
