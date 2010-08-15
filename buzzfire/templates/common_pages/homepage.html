@@ -34,34 +34,6 @@ bookmark and rank your favorite tweets today!
                 <div class="clear"></div>
             </div>
         </div>
-        <div class="tweet_result">
-            <div class="tweet">
-                "Django Dash is now on!"
-            </div>
-            <div class="tweet_info">
-                <div class="fleft"><img src="{{ MEDIA_URL }}images/user_ico.gif"></div>
-                <div class="fleft padbottom">someone</div>
-                <div class="fleft padright"><img src="{{ MEDIA_URL }}images/like_ico.gif"></div>
-                <div class="fleft padbottom red">135</div>
-                <div class="fleft padright"><img src="{{ MEDIA_URL }}images/comment_ico.gif"></div>
-                <div class="fleft padbottom">12 comments</div>
-                <div class="clear"></div>
-            </div>
-        </div>
-        <div class="tweet_result">
-            <div class="tweet">
-                "Django Dash is now on!"
-            </div>
-            <div class="tweet_info">
-                <div class="fleft"><img src="{{ MEDIA_URL }}images/user_ico.gif"></div>
-                <div class="fleft padbottom">someone</div>
-                <div class="fleft padright"><img src="{{ MEDIA_URL }}images/like_ico.gif"></div>
-                <div class="fleft padbottom red">135</div>
-                <div class="fleft padright"><img src="{{ MEDIA_URL }}images/comment_ico.gif"></div>
-                <div class="fleft padbottom">12 comments</div>
-                <div class="clear"></div>
-            </div>
-        </div>
         <div id="more"><a href="#" title="Click to view more popular tweets!" class="tooltip">more</a></div>
     </div>
 </div>
@@ -69,6 +41,14 @@ bookmark and rank your favorite tweets today!
 {% endblock %}
 
 {% block script %}
+	// latest bookmarks
+	var getbookmarks_url = '{% url latest_bookmarks %}';
+	getbookmarks_url += '?offset=0&length=10';
+	$.getJSON(getbookmarks_url, function(data) {
+		alert('top 10');
+	});
+	
+	// search 
     $('#searchbutton').click(function() {
     {% if buzz_auth %}
         var query_string = $('#search').val();
