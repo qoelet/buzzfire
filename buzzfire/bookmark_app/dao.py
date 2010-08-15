@@ -56,7 +56,7 @@ class BookmarkDao:
         self._connection.lrem("bookmark:bytime:bookmarks", bookmark_id)
         self._connection.lrem("user:%s:bookmarks" %(owner_id), bookmark_id)
         self._connection.srem("user:%s:bookmarks_set" %(owner_id), bookmark_id)
-        self._connection.srem("user:%s:bookmark_set_tweet_ids" %(owner_id), self._connection.get("bookmark:%s:tweet_id", tweet_id))
+        self._connection.srem("user:%s:bookmark_set_tweet_ids" %(owner_id), self._connection.get("bookmark:%s:tweet_id", bookmark_id))
         if(self._connection.exists("bookmark:%s:tags" %(bookmark_id))):
             tag_ids = self._connection.smembers("bookmark:%s:tags" %(bookmark_id))
             for id in tag_ids:
