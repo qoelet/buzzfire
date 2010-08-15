@@ -37,6 +37,7 @@ class BookmarkDao:
             self._connection.sadd("user:%s:bookmarks_set" %(bookmark.owner_id), bookmark.id)
             
             self._connection.zincrby("bookmark:byscore:bookmarks", bookmark.id, 0.0)
+            self._connection.zincrby("user:%s:byscore:bookmarks", bookmark.id, 0.0)
             self._connection.incr("bookmark:next_id")
             return bookmark.id
         else:
@@ -45,6 +46,7 @@ class BookmarkDao:
     def delete(self, bookmark_id):
         owner_id = self._connection.get("bookmark:%s:owner_id" %bookmark_id)
         self._connection.lrem("user:%s:bookmarks" %(owner_id), bookmark_id)
+        self._connection.zrem("user:%s:byscore:bookmarks" %(owner_id), bookmark_id)
         #if(self._connection.sismember("user:%s:likedbookmarks" %(owner_id), bookmark_id)):
         #    self.update_user_liked_bookmark(owner_id, -1)
         self._connection.zrem("bookmark:byscore:bookmarks", bookmark_id)
@@ -73,7 +75,7 @@ class BookmarkDao:
         if self._connection.exists("user:%s:bookmarks" %(user_id)):
             if int(length)<=-1:
                 length = self._connection.llen("user:%s:bookmarks" %(user_id))
-            bookmark_ids = self._connection.lrange("user:%s:bookmarks" %(user_id), offset, offset+length)
+            bookmark_ids = self._connection.lrange("user:%s:bookmarks" %(user_id), offset, str(int(offset)+int(length)))
             bookmarks= []
             for id in bookmark_ids:
                 bookmark = self.get_bookmark(id)
@@ -172,7 +174,7 @@ class BookmarkDao:
             self._connection.sadd("user:%s:likedbookmarks" %(owner_id), bookmark_id)
             # update the score of the bookmark
             self._connection.zadd("bookmark:byscore:bookmarks", bookmark_id, score_bookmark)
-            
+            self._connection.zadd("user:%s:byscore:bookmarks" owner_id, bookmark_id, score_bookmark)
             #add one more bookmark to the bookmark that user like
             self._connection.sadd("user:%s:likes" %(user_id), bookmark_id)
             
@@ -199,4 +201,24 @@ class BookmarkDao:
         self._connections.zadd("bookmark:byscore:bookmarks", score_bookmark)
 
     
+    def get_bookmark_by_rank(self, offset='0', length='-1'):
+        if int(length)<0:
+            length = self._connection.zcard("bookmark:byscore:bookmarks")
+            
+        bookmark_ids = self.connection.zrange("bookmark:byscore:bookmarks", offset, str(int(offset)+int(length)))
+        bookmarks=[]
+        for id in bookmark_ids:
+            bookmark.append(self.get_bookmark(id))
+        return bookmarks
+
+    def get_user_bookmark_by_rank(self, user_id, offset='0', length='-1'):
+        if int(length)<0:
+            length = self._connection.zcard("user:%s:byscore:bookmarks")
+            
+        bookmark_ids = self.connection.zrange("user:%s:byscore:bookmarks" %(user_id), offset, str(int(offset)+int(length)))
+        bookmarks=[]
+        for id in bookmark_ids:
+            bookmark.append(self.get_bookmark(id))
+        return bookmarks
+                                              
     

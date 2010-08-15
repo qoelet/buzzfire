@@ -107,4 +107,65 @@ def delete_bookmark(request, bookmark_id):
     else:
         return HttpResponseRedirect(settings.BUZZFIRE_LOGIN_URL)
             
+
+def like_bookmark(request, bookmark_id):
+    oauth_status = check_auth(request)
+    if oauth_status:
+        conn = get_redis_conn()
+        bookmark_dao = BookmarkDao(conn)
+        if request.method == 'POST':
+            user_id = request.session['buzz_user_id']
+            bookmark_dao.like_bookmark(user_id, bookmark_id)
+            return HttpResponse(bookmark_id, content_type="application/json")
+        else:
+            return HttpResponse()
+    else:
+        return HttpResponseRedirect(settings.BUZZFIRE_LOGIN_URL)
+
+
+def get_bookmark_by_rank(request):
+    oauth_status = check_auth(request)
+    if oauth_status:
+        conn = get_redis_conn()
+        bookmark_dao = BookmarkDao(conn)
+        if request.method =='GET':
+            if request.GET.has_key("offset"):
+                offset = request.GET['offset']
+            else:
+                offset = 0
+            if request.GET.has_key("length"):
+                length = str(int(request.GET['length'])-1)
+            else:
+                length ='-1'
+
+            bookmarks = bookmark_dao.get_bookmark_by_rank(offset, length)
+            result  = json.dumps(bookmarks, default=Bookmark.json_encode)
+            return HttpResponse(result, content_type = "application/json")
+        else:
+            return HttpResponse()
+    else:
+        return HttpResponseRedirect(settings.BUZZFIRE_LOGIN_URL)
+
             
+def get_user_bookmark_by_rank(request, user_id):
+    oauth_status = check_auth(request)
+    if oauth_status:
+        conn = get_redis_conn()
+        bookmark_dao = BookmarkDao(conn)
+        if request.method =='GET':
+            if request.GET.has_key("offset"):
+                offset = request.GET['offset']
+            else:
+                offset = 0
+            if request.GET.has_key("length"):
+                length = str(int(request.GET['length'])-1)
+            else:
+                length ='-1'
+
+            bookmarks = bookmark_dao.get_user_bookmark_by_rank(user_id, offset, length)
+            result  = json.dumps(bookmarks, default=Bookmark.json_encode)
+            return HttpResponse(result, content_type = "application/json")
+        else:
+            return HttpResponse()
+    else:
+        return HttpResponseRedirect(settings.BUZZFIRE_LOGIN_URL)
