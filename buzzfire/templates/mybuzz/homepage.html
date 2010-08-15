@@ -105,7 +105,7 @@ My Buzz!
         $.getJSON('{% url mybuzz_get_bookmarks %}', function(data) {
             $('#loader').fadeOut('fast');
             for(tweet in data) {
-            
+        
                 $('#mybuzz_timeline').append('<div class="tweet_result"><div class="tweet">' + data[tweet].text +
                 '</div>' +
                 '<div class="tweet_info">' + 
