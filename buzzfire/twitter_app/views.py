@@ -12,7 +12,7 @@ OAUTH_CALLBACK_URL = "http://buzz-fire.com/twitter/oauth_callback"
 REQUEST_TOKEN_URL = "http://twitter.com/oauth/request_token"
 ACCESS_TOKEN_URL = "http://twitter.com/oauth/access_token"
 AUTHORIZE_URL = "http://twitter.com/oauth/authorize"
-USER_TIMELINE_URL =" http://api.twitter.com/1/statuses/home_timeline.json"
+USER_TIMELINE_URL ="http://api.twitter.com/1/statuses/home_timeline.json"
 
 # AUTH VIEWS
 consumer = oauth.Consumer(buzz_secrets.CONSUMER_KEY, buzz_secrets.CONSUMER_SECRET)
@@ -61,10 +61,11 @@ def auth_user(request):
 	# Lookup user or create
 	conn = get_redis_conn()
 	user_dao = UserDao(conn)
-	user_id = access_token['user_id']
-	user_exists = user_dao.get_user_id(user_id)
-	if user_exists == None:
+
+	user_id = user_dao.get_user_id(access_token['screen_name'])
+	if user_id == None:
 		# create user
+
 		screen_name = access_token['screen_name']
 		new_user = User(screen_name, user_id, oauth_token_secret=access_token['oauth_token_secret'], oauth_token=access_token['oauth_token'])
 		user_dao.save(new_user)
@@ -73,7 +74,7 @@ def auth_user(request):
 		user = user_dao.get_user(user_id)
 		user.oauth_token_secret = access_token['oauth_token_secret']
 		user.oauth_token = oauth_token=access_token['oauth_token']
-		user_dao.save(user)
+		user_id=user_dao.save(user)
 		
 	request.session['buzz_user_id'] = user_id
 	
@@ -91,8 +92,13 @@ def get_timeline(request):
 	
 	if auth_status:
 		user_id = request.session['buzz_user_id']
+
+		conn = get_redis_conn()
+		user_dao = UserDao(conn)
+
                 user = user_dao.get_user(user_id)
                 oauth_token = user.oauth_token
+
                 oauth_token_secret = user.oauth_token_secret
                 authorized_token = oauth.Token(oauth_token, oauth_token_secret)
                 user_client =oauth.Client(consumer, authorized_token)
