@@ -128,7 +128,6 @@ My Buzz!
                     $('#' + bookmark_id).click(function(){
                         var post_url = '/bookmark/like/';
                         post_url += data[tweet].bookmark.id;
-                        post_url += '/';
                         $.post(post_url, $("#" + form_id).serialize(), function(data) {
                             alert('like saved');
                             // remove like link
