@@ -11,7 +11,7 @@ class Comment:
         
     def json_encode(obj):
         if isinstance(obj, Comment):
-            return {"user":r"{'id':'%s', 'owner_id':'%s', 'bookmark_id':'%s', 'text':'%s', 'created':'%s', 'updated':'%s'}" %(obj.id, obj.owner_id, obj.bookmark_id, obj.text, obj.created.strftime('%Y-%m-%dT%H:%M:%S'), obj.updated.strftime('%Y-%m-%dT%H:%M:%S'))}
+            return {"user":{'id':obj.id, 'owner_id':obj.owner_id, 'bookmark_id':obj.bookmark_id, 'text':obj.text, 'created':obj.created.strftime('%Y-%m-%dT%H:%M:%S'), 'updated': obj.updated.strftime('%Y-%m-%dT%H:%M:%S')}} 
         else:
             return {}
         

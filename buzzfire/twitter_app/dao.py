@@ -31,7 +31,7 @@ class UserDao:
     
     def delete(self, user_id):
         self._connection.srem("user:members", user_id)
-        user_keys = self._connection.keys("user:%s:*" %(user_id)).split()
+        user_keys = self._connection.keys("user:%s:*" %(user_id))
         if(len(user_keys)!=0):
             for key in user_keys:
                 self._connection.delete(key)

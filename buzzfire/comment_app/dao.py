@@ -34,7 +34,7 @@ class CommentDao:
         bookmark_id = self._connection.get("comment:%s:bookmark_id" %(comment_id))
         self._connection.rpop("bookmark:%s:comments" %(bookmark_id), comment_id)
         self._connection.rpop("user:%s:comments" %(owner_id), comment_id)
-        comment_keys = self._connection.keys("comment:%s:*" %(comment_id)).split()
+        comment_keys = self._connection.keys("comment:%s:*" %(comment_id))
         if(len(comment_keys)!=0):
             for key in comment_keys:
                 self._connection.delete(key)
