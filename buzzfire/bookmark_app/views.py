@@ -5,6 +5,7 @@ from django.http import Http404
 from buzzfire.bookmark_app.models import Bookmark
 from buzzfire.bookmark_app.dao import BookmarkDao
 from buzzfire.utils.utils import convert_to_builtin_type, check_auth, get_redis_conn
+from buzzfire import settings
 
 import simplejson as json
 
