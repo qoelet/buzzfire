@@ -60,15 +60,79 @@ bookmark and rank your favorite tweets today!
 	$.getJSON(getbookmarks_url, function(data) {
 		for(tweet in data) {
 			var form_id;
+            //console.log(data[tweet].bookmark.tweet_txt);
         }
 	});
 	
 	// top tweets
 	var gettoptweets_url = '{% url top_tweets %}';
 	gettoptweets_url += '?offset=0&length=10';
-	$.getJSON(gettoptweets_url, function(data) {
-		alert('got top tweets');
-	});
+	
+	function toptweets() {
+		$.getJSON(gettoptweets_url, function(data) {
+			for(tweet in data) {
+				var form_id = 'bookmark_form_' + tweet;
+                var bookmark_id = 'bookmark_' + tweet;
+                var that = this;
+				
+				// append tweet
+				$('#top_tweets_box').append('<div class="tweet_result"><div class="tweet">' + data[tweet].bookmark.tweet_txt +
+                '</div>' +
+                '<div class="tweet_info">' + 
+                '<div class="fleft"><img src="{{ MEDIA_URL }}images/user_ico.gif"></div>' +
+                '<div class="fleft padbottom">' + data['results'][tweet].from_user + '</div>' + 
+				'<div class="fleft padright"><a id="like_' + bookmark_id  + '"><img src=\"{{ MEDIA_URL }}images/bookmark_ico.png\"></a></div>' + 
+                '<div class="fleft padbottom red">like me!</div>' +
+                '<div class="fleft padright"><a id="' + bookmark_id  + '"><img src=\"{{ MEDIA_URL }}images/bookmark_ico.png\"></a></div>' + 
+                '<div class="fleft padbottom red">bookmark me!</div>' +
+                '<form id="' + form_id + '"' + ' method="post">' +
+                '<input type="hidden" name="bookmark_id" value="' + data[tweet].bookmark.id + '">' +
+                '</form>' +
+                '<div class="clear"></div>'  + 
+                '</div></div>').fadeIn('slow');
+
+                function add_handler(bookmark_id, form_id) {
+                    // add post handler
+                    $('#' + bookmark_id).click(function(){
+                        $.post('{% url mybuzz_add_bookmark %}', $("#" + form_id).serialize(), function(data) {
+                            alert(data);
+                        });
+                    });
+
+                    // hover 
+                    $('#' + bookmark_id).hover(function(){
+                        $('#' + bookmark_id + ' img').attr('src','{{ MEDIA_URL }}images/bookmark_on_ico.png');
+                    }, function() {
+                        $('#' + bookmark_id + ' img').attr('src','{{ MEDIA_URL }}images/bookmark_ico.png');
+                    });
+                }
+
+				function like_handler(bookmark_id) {
+                    // add post handler
+                    $('#like_' + bookmark_id).click(function(){
+                        var post_url = '/bookmark/like/';
+                        post_url += data[tweet].bookmark.id;
+                        $.post(post_url, $("#" + form_id).serialize(), function(data) {
+                            alert('like saved');
+                            // remove like link
+                        });
+                    });
+                    
+                    // hover 
+                    $('#' + bookmark_id).hover(function(){
+                        $('#' + bookmark_id + ' img').attr('src','{{ MEDIA_URL }}images/like_on_ico.gif');
+                    }, function() {
+                        $('#' + bookmark_id + ' img').attr('src','{{ MEDIA_URL }}images/like_ico.gif');
+                    });
+                }
+                
+                like_handler(bookmark_id);
+
+                add_handler(bookmark_id, form_id);
+
+			}
+		});
+	}
 	
 	// search 
     $('#searchbutton').click(function() {
