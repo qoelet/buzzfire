@@ -33,7 +33,7 @@ def login(request):
 	
 	auth_url = "%s?oauth_token=%s" % (AUTHORIZE_URL, request.session['request_token']['oauth_token'])
 	
-	return HttpResponseRedirect(url)
+	return HttpResponseRedirect(auth_url)
 
 def logout(request):
 	try:
