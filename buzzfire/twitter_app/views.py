@@ -2,6 +2,7 @@ from django.http import HttpResponseRedirect, HttpResponse
 
 import urlparse
 import oauth2 as oauth
+import urllib
 
 from buzzfire.twitter_app.models import User
 from buzzfire.twitter_app.dao import UserDao
@@ -13,6 +14,7 @@ REQUEST_TOKEN_URL = "http://twitter.com/oauth/request_token"
 ACCESS_TOKEN_URL = "http://twitter.com/oauth/access_token"
 AUTHORIZE_URL = "http://twitter.com/oauth/authorize"
 USER_TIMELINE_URL ="http://api.twitter.com/1/statuses/home_timeline.json"
+SEARCH_URL="http://search.twitter.com/search.json?result_type=mixed"
 
 # AUTH VIEWS
 consumer = oauth.Consumer(buzz_secrets.CONSUMER_KEY, buzz_secrets.CONSUMER_SECRET)
@@ -111,3 +113,32 @@ def get_timeline(request):
                 return HttpResponse(content)
 	else:
 		return HttpResponseRedirect(settings.BUZZFIRE_LOGIN_URL)
+
+
+def search(request, query_string):
+        auth_status = check_auth(request)
+        if auth_status:
+                user_id = request.session['buzz_user_id']
+                
+                conn = get_redis_conn()
+                user_dao = UserDao(conn)
+                
+                user = user_dao.get_user(user_id)
+                oauth_token = user.oauth_token
+
+                oauth_token_secret = user.oauth_token_secret
+                authorized_token = oauth.Token(oauth_token, oauth_token_secret)
+                user_client =oauth.Client(consumer, authorized_token)
+                q = urllib.urlencode(query_string)
+                search_url = SEARCH_URL+"&q="+q
+                resp, content = user_client.request(search_url)
+                try:
+                        if resp['status'] != '200':
+                                error_message = "Invalid response received: %s" % resp['status']
+                except KeyError:
+                        raise Exception('Did not get a proper response')
+                return HttpResponse(content)
+	else:
+		return HttpResponseRedirect(settings.BUZZFIRE_LOGIN_URL)
+
+                
