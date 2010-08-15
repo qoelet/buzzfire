@@ -33,10 +33,25 @@ My Buzz!
     $('#view_latest_tweets').click(function() {
         $('#mybuzz_timeline').fadeOut('fast').empty();
         $('#mybuzz_timeline').append('<div id="loader"><img src="{{ MEDIA_URL }}images/loader.gif"></div>').fadeIn('fast');
+        
+        // dim other links
+        $('#view_latest_tweets img').attr('src','{{ MEDIA_URL }}images/latest_tweets.gif');
+        $('#view_bookmarks img').attr('src','{{ MEDIA_URL }}images/my_bookmarks_off.gif.gif');
+        
         refresh_data();
     });
     
-    // user_id = "{{ request.session['buzz_user_id'] }}";
+    // get bookmarks
+    $('#view_bookmarks').click(function() {
+        $('#mybuzz_timeline').fadeOut('fast').empty();
+        $('#mybuzz_timeline').append('<div id="loader"><img src="{{ MEDIA_URL }}images/loader.gif"></div>').fadeIn('fast');
+        
+        // dim other links
+        $('#view_latest_tweets img').attr('src','{{ MEDIA_URL }}images/latest_tweets_off.gif');
+        $('#view_bookmarks img').attr('src','{{ MEDIA_URL }}images/my_bookmarks.gif.gif');
+        
+        get_bookmarks();
+    });
     
     // Get user timeline
     function refresh_data() {
@@ -81,6 +96,30 @@ My Buzz!
                 }
                 
                 add_handler(bookmark_id, form_id);
+            }
+        });
+    }
+    
+    // get user bookmarks
+    function get_bookmarks() {
+        $.getJSON('{% url mybuzz_get_bookmarks %}', function(data) {
+            $('#loader').fadeOut('fast');
+            for(tweet in data) {
+            
+                $('#mybuzz_timeline').append('<div class="tweet_result"><div class="tweet">' + data[tweet].text +
+                '</div>' +
+                '<div class="tweet_info">' + 
+                '<div class="fleft"><img src="{{ MEDIA_URL }}images/user_ico.gif"></div>' +
+                '<div class="fleft padbottom">' + data[tweet].user.screen_name + '</div>' + 
+                '<div class="fleft padright"><a id="' + bookmark_id  + '"><img src=\"{{ MEDIA_URL }}images/bookmark_ico.png\"></a></div>' + 
+                '<div class="fleft padbottom red">bookmark me!</div>' +
+                '<form id="' + form_id + '"' + ' method="post">' +
+                '<input type="hidden" name="tweet_id" value="' + data[tweet].id + '">' +
+                '<input type="hidden" name="tweet_txt" value="' + data[tweet].text + '">' +
+                '<input type="hidden" name="tweeter_screenname" value="' + data[tweet].user.screen_name  + '">' +
+                '</form>' +
+                '<div class="clear"></div>'  + 
+                '</div></div>').fadeIn('slow');
             }
         });
     }

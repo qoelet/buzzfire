@@ -41,9 +41,13 @@ def add(request):
     else:
         return HttpResponseRedirect(settings.BUZZFIRE_LOGIN_URL)
 
-def get_user_bookmark(request, user_id):
+def get_user_bookmark(request, user_id=None):
     oauth_status = check_auth(request)
     if oauth_status:
+	
+		if user_id == None:
+			user_id = request.session['buzz_user_id']
+			
         conn = get_redis_conn()
         bookmark_dao = BookmarkDao(conn)
         if request.method =='GET':
