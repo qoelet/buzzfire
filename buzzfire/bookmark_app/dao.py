@@ -88,7 +88,9 @@ class BookmarkDao:
         location = (self._connection.get("bookmark:%s:latitude" %(bookmark_id)), self._connection.get("bookmark:%s:longitude" %(bookmark_id)))
         created = datetime.datetime.strptime(self._connection.get("bookmark:%s:created" %(bookmark_id)),"%Y-%m-%d %H:%M:%S")
         updated = datetime.datetime.strptime(self._connection.get("bookmark:%s:updated" %(bookmark_id)),"%Y-%m-%d %H:%M:%S")
-        bookmark = Bookmark(owner_id=owner_id, tweet_id=tweet_id, tweet_txt=tweet_txt, tweeter_screenname=tweeter_screenname, location=location, created=created, updated=updated, id=bookmark_id)
+        tags = self._connection.smember("bookmark:%s:tags" %(bookmark_id))
+        
+        bookmark = Bookmark(owner_id=owner_id, tweet_id=tweet_id, tweet_txt=tweet_txt, tweeter_screenname=tweeter_screenname, location=location, created=created, updated=updated, id=bookmark_id, tags=list(tags))
         return bookmark
         
  
