@@ -36,6 +36,8 @@ My Buzz!
         refresh_data();
     });
     
+    // user_id = "{{ request.session['buzz_user_id'] }}";
+    
     // Get user timeline
     function refresh_data() {
         $.getJSON('{% url mybuzz_timeline %}', function(data) {
