@@ -241,11 +241,11 @@ def get_user_who_like_bookmark(request, bookmark_id):
     if oauth_status:
         conn = get_redis_conn()
         bookmark_dao = BookmarkDao(conn)
-         if request.method =='GET':
-             users = bookmark_dao.get_user_who_like_bookmark(bookmark_id)
-             result = json.dumps(result)
+        if request.method =='GET':
+             users = bookmark_dao.get_users_who_like_bookmark(bookmark_id)
+             result = json.dumps(users)
              return HttpResponse(result, content_type="application/json")
-         else:
+        else:
             return HttpResponse()
     else:
         return HttpResponseRedirect(settings.BUZZFIRE_LOGIN_URL)
