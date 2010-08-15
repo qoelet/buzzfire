@@ -183,7 +183,8 @@ def get_user_bookmark_rank(request, bookmark_id):
         if request.method =='GET':
             user_id =request.session['buzz_user_id']
             rank = bookmark_dao.get_bookmark_user_rank(user_id, bookmark_id)
-            if rank:
+            
+            if rank!=None:
                 return HttpResponse(rank, content_type = "application/json")
             else:
                 return HttpResponse("{'status':'error'}", content_type="application/json")
@@ -203,7 +204,7 @@ def get_global_bookmark_rank(request, bookmark_id):
            
             rank = bookmark_dao.get_bookmark_global_rank(bookmark_id)
         
-            if rank:
+            if rank !=None:
                 return HttpResponse(rank, content_type = "application/json")
             else:
                 return HttpResponse("{'status':'error'}", content_type="application/json")
