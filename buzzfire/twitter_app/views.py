@@ -150,7 +150,7 @@ def search(request):
 						error_message = "Invalid response received: %s" % resp['status']
 		except KeyError:
 				raise Exception('Did not get a proper response')
-		return HttpResponse(content)
+		return HttpResponse(content, content_type = "application/json")
 	else:
 		return HttpResponseRedirect(settings.BUZZFIRE_LOGIN_URL)
 
