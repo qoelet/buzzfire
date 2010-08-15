@@ -83,7 +83,8 @@ My Buzz!
                     // add post handler
                     $('#' + bookmark_id).click(function(){
                         $.post('{% url mybuzz_add_bookmark %}', $("#" + form_id).serialize(), function(data) {
-                            alert(data);
+                            alert('bookmark saved');
+                            // remove bookmark link
                         });
                     });
             
@@ -105,14 +106,44 @@ My Buzz!
         $.getJSON('{% url mybuzz_get_ownbookmarks %}', function(data) {
             $('#loader').fadeOut('fast');
             for(tweet in data) {
+                
+                var form_id = 'like_form_' + tweet;
+                var bookmark_id = 'bookmark_' + data[tweet].bookmark.id;
         
                 $('#mybuzz_timeline').append('<div class="tweet_result"><div class="tweet">' + data[tweet].bookmark.tweet_txt +
                 '</div>' +
                 '<div class="tweet_info">' + 
                 '<div class="fleft"><img src="{{ MEDIA_URL }}images/user_ico.gif"></div>' +
                 '<div class="fleft padbottom">' + data[tweet].bookmark.tweeter_screenname + '</div>' + 
+                '<div class="fleft"><a id="' + bookmark_id  + '"><img src="{{ MEDIA_URL }}images/like_ico.gif"></a></div>' +
+                '<div class="fleft padbottom red">like me!</div>' +
+                '<form id="' + form_id + '"' + ' method="post">' +
+                '<input type="hidden" name="bookmark_id" value="' + data[tweet].bookmark.id + '">' +
+                '</form>' +
                 '<div class="clear"></div>'  + 
                 '</div></div>').fadeIn('slow');
+                
+                function like_handler(bookmark_id) {
+                    // add post handler
+                    $('#' + bookmark_id).click(function(){
+                        var post_url = '/bookmark/like/';
+                        post_url += bookmark_id;
+                        post_url += '/';
+                        $.post(post_url, $("#" + form_id).serialize(), function(data) {
+                            alert('like saved');
+                            // remove like link
+                        });
+                    });
+                    
+                    // hover 
+                    $('#' + bookmark_id).hover(function(){
+                        $('#' + bookmark_id + ' img').attr('src','{{ MEDIA_URL }}images/like_on_ico.png');
+                    }, function() {
+                        $('#' + bookmark_id + ' img').attr('src','{{ MEDIA_URL }}images/like_ico.png');
+                    });
+                }
+                
+                like_handler(bookmark_id);
             }
         });
     }
