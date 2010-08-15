@@ -22,6 +22,8 @@ urlpatterns = patterns('',
     url(r'^comment/delete/(\w+)$', 'buzzfire.comment_app.views.delete'),
                        
     url(r'^bookmark/add/$', 'buzzfire.bookmark_app.views.add'),
+    url(r'^bookmark/user/(\w+)$', 'buzzfire.bookmark_app.views.get_user_bookmark'),
+                  
     # user_page
     url(r'^mybuzz/$', 'buzzfire.twitter_app.views.mybuzz'),
     
