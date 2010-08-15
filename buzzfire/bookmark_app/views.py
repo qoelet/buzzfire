@@ -52,9 +52,9 @@ def get_user_bookmark(request, user_id):
             else:
                 offset = 0
             if request.GET.has_key("length"):
-                length = request.GET['length']
+                length = str(int(request.GET['length'])-1)
             else:
-                length =-1
+                length ='-1'
             bookmarks = bookmark_dao.get_bookmark_of_user(user_id, offset, length)
             result  = json.dumps(bookmarks, default=Bookmark.json_encode)
             return HttpResponse(result, content_type = "application/json")
