@@ -48,7 +48,7 @@ My Buzz!
         
         // dim other links
         $('#view_latest_tweets img').attr('src','{{ MEDIA_URL }}images/latest_tweets_off.gif');
-        $('#view_bookmarks img').attr('src','{{ MEDIA_URL }}images/my_bookmarks.gif.gif');
+        $('#view_bookmarks img').attr('src','{{ MEDIA_URL }}images/my_bookmarks.gif');
         
         get_bookmarks();
     });
@@ -137,9 +137,9 @@ My Buzz!
                     
                     // hover 
                     $('#' + bookmark_id).hover(function(){
-                        $('#' + bookmark_id + ' img').attr('src','{{ MEDIA_URL }}images/like_on_ico.png');
+                        $('#' + bookmark_id + ' img').attr('src','{{ MEDIA_URL }}images/like_on_ico.gif');
                     }, function() {
-                        $('#' + bookmark_id + ' img').attr('src','{{ MEDIA_URL }}images/like_ico.png');
+                        $('#' + bookmark_id + ' img').attr('src','{{ MEDIA_URL }}images/like_ico.gif');
                     });
                 }
                 
