@@ -69,9 +69,9 @@ class BookmarkDao:
                 self.delete(key)
         
 
-    def get_bookmark_of_user(self, user_id, offset=0, length=-1):
+    def get_bookmark_of_user(self, user_id, offset='0', length='-1'):
         if self._connection.exists("user:%s:bookmarks" %(user_id)):
-            if length<=-1:
+            if int(length)<=-1:
                 length = self._connection.llen("user:%s:bookmarks" %(user_id))
             bookmark_ids = self._connection.lrange("user:%s:bookmarks" %(user_id), offset, offset+length)
             bookmarks= []
