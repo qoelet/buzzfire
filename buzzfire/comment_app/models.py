@@ -9,3 +9,9 @@ class Comment:
         self.created=created
         self.updated=updated
         
+    def json_encode(obj):
+        if isinstance(obj, Comment):
+            return {"user":r"{'id':'%s', 'owner_id':'%s', 'bookmark_id':'%s', 'text':'%s', 'created':'%s', 'updated':'%s'}" %(obj.id, obj.owner_id, obj.bookmark_id, obj.text, obj.created.strftime('%Y-%m-%dT%H:%M:%S'), obj.updated.strftime('%Y-%m-%dT%H:%M:%S'))}
+        else:
+            return {}
+        
