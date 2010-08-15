@@ -31,7 +31,7 @@ My Buzz!
     
     // refresh data
     $('#view_latest_tweets').click(function() {
-        $('#mybuzz_timeline').fadeOut('fast').empty();
+        $('#mybuzz_timeline').fadeOut('fast').empty().append('<div id="loader"><img src="{{ MEDIA_URL }}images/loader.gif"></div>');
         refresh_data();
     });
     
