@@ -89,6 +89,16 @@ div#signout_btn {
     font-size: 0.9em;
 }
 
+div#signout_btn {
+    width: 104px;
+    height: 34px;
+    background-image: url('../images/mybuzz_bg.gif');
+    background-repeat: no-repeat;
+    color: #fff;
+    padding: 5px 0px 5px 10px;
+    font-size: 0.9em;
+}
+
 .rightie {
     float: right;
 }
