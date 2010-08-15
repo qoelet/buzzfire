@@ -10,7 +10,9 @@ My Buzz!
     <h1>My Buzz</h1>
     <h2>Latest Tweets</h2>
     <div id="mybuzz_timeline">
-        
+        <div id="loader">
+            <img src="{{ MEDIA_URL }}images/loader.gif">
+        </div>
     </div>
 {% else %}
     <h2>You need to sign in!</h2>
@@ -22,14 +24,16 @@ My Buzz!
     {% if buzz_auth %}
     // Get user timeline
     $.getJSON('{% url mybuzz_timeline %}', function(data) {
+        $('#loader').fadeOut();
         for(tweet in data) {
             $('#mybuzz_timeline').append('<div class="tweet_result"><div class="tweet">' + data[tweet].text +
             '</div>' +
             '<div class="tweet_info">' + 
             '<div class="fleft"><img src="{{ MEDIA_URL }}images/user_ico.gif"></div>' +
             '<div class="fleft padbottom">' + data[tweet].user.screen_name + '</div>' + 
+            '<div class="fleft"><img src="{{ MEDIA_URL }}images/bookmark_ico.gif"></div>' + 
             '<div class="clear"></div>'  + 
-            '</div></div>');
+            '</div></div>').fadeIn();
         }
     });
     {% endif %}
