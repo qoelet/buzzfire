@@ -12,43 +12,44 @@ OAUTH_CALLBACK_URL = "http://buzz-fire.com/twitter/oauth_callback"
 REQUEST_TOKEN_URL = "http://twitter.com/oauth/request_token"
 ACCESS_TOKEN_URL = "http://twitter.com/oauth/access_token"
 AUTHORIZE_URL = "http://twitter.com/oauth/authorize"
+USER_TIMELINE_URL =" http://api.twitter.com/1/statuses/home_timeline.json"
 
 # AUTH VIEWS
 
-def login(request):
-	consumer = oauth.Consumer(buzz_secrets.CONSUMER_KEY, buzz_secrets.CONSUMER_SECRET)
-	client = oauth.Client(consumer)
-	
-	# Get request token
-	resp, content = client.request(REQUEST_TOKEN_URL, "GET")
+def login(request):	
+        consumer = oauth.Consumer(buzz_secrets.CONSUMER_KEY, buzz_secrets.CONSUMER_SECRET)
+        client = oauth.Client(consumer)
+
+        # Get request token
+        resp, content = client.request(REQUEST_TOKEN_URL, "GET")
 	try:
 		if resp['status'] != '200':
 			error_message = "Invalid response received: %s" % resp['status']
 	except KeyError:
 		raise Exception('Did not get a proper response')
-		
+        
 	# store to session store
 	request.session['request_token'] = dict(urlparse.parse_qsl(content))
 	
 	auth_url = "%s?oauth_token=%s" % (AUTHORIZE_URL, request.session['request_token']['oauth_token'])
 	
 	return HttpResponseRedirect(url)
-	
+
 def logout(request):
 	try:
 		del request.session['buzz_user_id']
 	except KeyError:
 		pass
-		
+        
 	return HttpResponseRedirect(settings.BUZZFIRE_HOME_PAGE)
-	
+
 def auth_user(request):
 	token = oauth.Token(request.session['request_token']['oauth_token'], request.session['request_token']['oauth_token_secret'])
 	
 	resp, content = client.request(ACCESS_TOKEN_URL, "GET")
 	if resp['status'] != 200:
 		raise Exception("Invalid response from Twitter.")
-		
+        
 	access_token = dict(urlparse.parse_qsl(content))
 	
 	# Lookup user or create
@@ -72,17 +73,29 @@ def auth_user(request):
 	
 	# redirect to user homepage
 	return HttpResponse(settings.BUZZFIRE_USER_PAGE)
-	
+
 def mybuzz(request):
 	# Get user's timeline
 	return render_to_response('mybuzz/homepage.html', {}, context_instance=RequestContext(request))
-	
+
 # DATA GET VIEWS
 
 def get_timeline(request):
 	auth_status = check_auth(request)
 	
 	if auth_status:
-		return True
+		user_id = request.session['buzz_user_id']
+                user = user_dao.get_user(user_id)
+                oauth_token = user.oauth_token
+                oauth_token_secret = user.oauth_token_secret
+                authorized_token = oauth.Token(oauth_token, oauth_token_secret)
+                client =oauth.Client(consumer, authorized_token)
+                resp, content = client.request.(USER_TIMELINE_URL)
+                try:
+                        if resp['status'] != '200':
+                                error_message = "Invalid response received: %s" % resp['status']
+                except KeyError:
+                        raise Exception('Did not get a proper response')
+                return HttpResponse(content)
 	else:
 		return HttpResponseRedirect(settings.BUZZFIRE_LOGIN_URL)
