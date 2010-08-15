@@ -8,17 +8,19 @@ def homepage(request):
 	
 	if auth_status:
 		buzz_auth = True
+		buzz_id = request.session['buzz_user_id']
 	else:
 		buzz_auth = None
 		
-	return render_to_response('common_pages/homepage.html', {'buzz_auth':buzz_auth}, context_instance=RequestContext(request))
+	return render_to_response('common_pages/homepage.html', {'buzz_auth':buzz_auth, 'buzz_id':buzz_id}, context_instance=RequestContext(request))
 	
 def faq(request):
 	auth_status = check_auth(request)
 	
 	if auth_status:
 		buzz_auth = True
+		buzz_id = request.session['buzz_user_id']
 	else:
 		buzz_auth = None
 		
-	return render_to_response('common_pages/faq.html', {'buzz_auth':buzz_auth}, context_instance=RequestContext(request))
+	return render_to_response('common_pages/faq.html', {'buzz_auth':buzz_auth, 'buzz_id':buzz_id}, context_instance=RequestContext(request))

@@ -184,7 +184,7 @@ My Buzz!
     
     // get user bookmarks
     function get_bookmarks() {
-        $.getJSON('{% url mybuzz_get_ownbookmarks %}', function(data) {
+        $.getJSON('/bookmark/user/{{ buzz_id }}', function(data) {
             $('#loader').fadeOut('fast');
             for(tweet in data) {
                 
