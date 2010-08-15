@@ -15,8 +15,8 @@ AUTHORIZE_URL = "http://twitter.com/oauth/authorize"
 USER_TIMELINE_URL =" http://api.twitter.com/1/statuses/home_timeline.json"
 
 # AUTH VIEWS
- consumer = oauth.Consumer(buzz_secrets.CONSUMER_KEY, buzz_secrets.CONSUMER_SECRET)
- client = oauth.Client(consumer)
+consumer = oauth.Consumer(buzz_secrets.CONSUMER_KEY, buzz_secrets.CONSUMER_SECRET)
+client = oauth.Client(consumer)
 
 
 def login(request):	
