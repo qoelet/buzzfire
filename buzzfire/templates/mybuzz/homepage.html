@@ -231,7 +231,7 @@ My Buzz!
 	                  var del_posturl = '/bookmark/delete/';
 	                  del_posturl += data[tweet].bookmark.id;
 	                  $('#del_' + bookmark_id).click(function(){
-	                      $.post(, $("#" + form_id).serialize(), function(data) {
+	                      $.post(del_posturl, $("#" + form_id).serialize(), function(data) {
 	                          alert('bookmark removed');
 	                      });
 						  $('#del_'+bookmark_id).parent().fadeOut();
