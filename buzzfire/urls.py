@@ -7,28 +7,27 @@ from buzzfire import settings
 
 urlpatterns = patterns('',
     # temp serves for media
-	(r'^site_media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.STATIC_DOC_ROOT, 'show_indexes':True}),
-	
-	# authentication
-	(r'^login/$', 'buzzfire.twitter_app.views.login'),
-	(r'^logout/$', 'buzzfire.twitter_app.views.logout'),
-        (r'^authenticated/$', 'buzzfire.twitter_app.views.auth_user'),
-        (r'^timeline/$', 'buzzfire.twitter_app.views.get_timeline'),               
-        (r'^search/(\w+)$', 'buzzfire.twitter_app.views.search'),
-        (r'^update/$', 'buzzfire.twitter_app.views.update_status'),
-        (r'^comment/add/$', 'buzzfire.comment_app.views.add'),
-        (r'^comment/get/(\w+)$', 'buzzfire.comment_app.views.get'),
-        (r'^comment/get/bookmark/(\w+)$', 'buzzfire.comment_app.views.get_bookmark_comment'),
-        (r'^comment/delete/(\w+)$', 'buzzfire.comment_app.views.delete'),
+    (r'^site_media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.STATIC_DOC_ROOT, 'show_indexes':True}),
+    
+    # authentication
+    url(r'^login/$', 'buzzfire.twitter_app.views.login'),
+    url(r'^logout/$', 'buzzfire.twitter_app.views.logout'),
+    url(r'^authenticated/$', 'buzzfire.twitter_app.views.auth_user'),
+    url(r'^timeline/$', 'buzzfire.twitter_app.views.get_timeline', name="mybuzz_timeline"),               
+    url(r'^search/(\w+)$', 'buzzfire.twitter_app.views.search'),
+    url(r'^update/$', 'buzzfire.twitter_app.views.update_status'),
+    url(r'^comment/add/$', 'buzzfire.comment_app.views.add'),
+    url(r'^comment/get/(\w+)$', 'buzzfire.comment_app.views.get'),
+    url(r'^comment/get/bookmark/(\w+)$', 'buzzfire.comment_app.views.get_bookmark_comment'),
+    url(r'^comment/delete/(\w+)$', 'buzzfire.comment_app.views.delete'),
          
-	
-	# user_page
-	(r'^mybuzz/$', 'buzzfire.twitter_app.views.mybuzz'),
-	
-	# FAQ
-	(r'^faq/$', 'buzzfire.common_pages.faq'),
-	
+    
+    # user_page
+    url(r'^mybuzz/$', 'buzzfire.twitter_app.views.mybuzz'),
+    
+    # FAQ
+    url(r'^faq/$', 'buzzfire.common_pages.faq'),
 
-	# homepage
-	(r'^$', 'buzzfire.common_pages.homepage'),
+    # homepage
+    url(r'^$', 'buzzfire.common_pages.homepage'),
 )

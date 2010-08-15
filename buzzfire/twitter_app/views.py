@@ -1,5 +1,7 @@
 from django.http import HttpResponseRedirect, HttpResponse
 from django.views.decorators.csrf import csrf_protect
+from django.shortcuts import render_to_response
+from django.template import RequestContext
 
 import urlparse
 import oauth2 as oauth
@@ -23,16 +25,16 @@ consumer = oauth.Consumer(buzz_secrets.CONSUMER_KEY, buzz_secrets.CONSUMER_SECRE
 client = oauth.Client(consumer)
 
 
-def login(request):	
-       
-        # Get request token
-        resp, content = client.request(REQUEST_TOKEN_URL, "GET")
+def login(request): 
+	   
+	# Get request token
+	resp, content = client.request(REQUEST_TOKEN_URL, "GET")
 	try:
 		if resp['status'] != '200':
 			error_message = "Invalid response received: %s" % resp['status']
 	except KeyError:
-		raise Exception('Did not get a proper response')
-        
+		error_message = "No data received."
+		
 	# store to session store
 	request.session['request_token'] = dict(urlparse.parse_qsl(content))
 	
@@ -45,7 +47,7 @@ def logout(request):
 		del request.session['buzz_user_id']
 	except KeyError:
 		pass
-        
+		
 	return HttpResponseRedirect(settings.BUZZFIRE_HOME_PAGE)
 
 def auth_user(request):
@@ -59,7 +61,7 @@ def auth_user(request):
 	if resp['status'] != '200':
 		
 		raise Exception("Invalid response from Twitter.")
-        
+		
 	access_token = dict(urlparse.parse_qsl(content))
 	
 	# Lookup user or create
@@ -100,88 +102,85 @@ def get_timeline(request):
 		conn = get_redis_conn()
 		user_dao = UserDao(conn)
 
-                user = user_dao.get_user(user_id)
-                oauth_token = user.oauth_token
+		user = user_dao.get_user(user_id)
+		oauth_token = user.oauth_token
 
-                oauth_token_secret = user.oauth_token_secret
-                authorized_token = oauth.Token(oauth_token, oauth_token_secret)
-                user_client =oauth.Client(consumer, authorized_token)
-                resp, content = user_client.request(USER_TIMELINE_URL)
-                try:
-                        if resp['status'] != '200':
-                                error_message = "Invalid response received: %s" % resp['status']
-                except KeyError:
-                        raise Exception('Did not get a proper response')
-                return HttpResponse(content)
+		oauth_token_secret = user.oauth_token_secret
+		authorized_token = oauth.Token(oauth_token, oauth_token_secret)
+		user_client =oauth.Client(consumer, authorized_token)
+		resp, content = user_client.request(USER_TIMELINE_URL)
+		try:
+				if resp['status'] != '200':
+						error_message = "Invalid response received: %s" % resp['status']
+		except KeyError:
+				raise Exception('Did not get a proper response')
+		return HttpResponse(content)
 	else:
 		return HttpResponseRedirect(settings.BUZZFIRE_LOGIN_URL)
 
 
 def search(request, query_string):
-        auth_status = check_auth(request)
-        if auth_status:
-                user_id = request.session['buzz_user_id']
-                
-                conn = get_redis_conn()
-                user_dao = UserDao(conn)
-                
-                user = user_dao.get_user(user_id)
-                oauth_token = user.oauth_token
+	auth_status = check_auth(request)
+	if auth_status:
+		user_id = request.session['buzz_user_id']
+		
+		conn = get_redis_conn()
+		user_dao = UserDao(conn)
+		
+		user = user_dao.get_user(user_id)
+		oauth_token = user.oauth_token
 
-                oauth_token_secret = user.oauth_token_secret
-                authorized_token = oauth.Token(oauth_token, oauth_token_secret)
-                user_client =oauth.Client(consumer, authorized_token)
-                q = urllib.urlencode({"q":query_string})
-                search_url = SEARCH_URL+"&"+q
-                resp, content = user_client.request(search_url)
-                try:
-                        if resp['status'] != '200':
-                                error_message = "Invalid response received: %s" % resp['status']
-                except KeyError:
-                        raise Exception('Did not get a proper response')
-                return HttpResponse(content)
+		oauth_token_secret = user.oauth_token_secret
+		authorized_token = oauth.Token(oauth_token, oauth_token_secret)
+		user_client =oauth.Client(consumer, authorized_token)
+		q = urllib.urlencode({"q":query_string})
+		search_url = SEARCH_URL+"&"+q
+		resp, content = user_client.request(search_url)
+		try:
+				if resp['status'] != '200':
+						error_message = "Invalid response received: %s" % resp['status']
+		except KeyError:
+				raise Exception('Did not get a proper response')
+		return HttpResponse(content)
 	else:
 		return HttpResponseRedirect(settings.BUZZFIRE_LOGIN_URL)
 
-                
+				
 
 def update_status(request):
-        auth_status = check_auth(request)
-        if auth_status:
-                user_id = request.session['buzz_user_id']
-		
-                if request.method == 'POST':
-                        status = request.POST['status']
-			if request.POST.has_key('tweet_id'):
-				tweet_id = request.POST['tweet_id']
-			else:
-				tweet_id =None
-                        
-                        conn = get_redis_conn()
-                        user_dao = UserDao(conn)
-                
-                        user = user_dao.get_user(user_id)
-                        oauth_token = user.oauth_token
-                        
-                        oauth_token_secret = user.oauth_token_secret
-                        authorized_token = oauth.Token(oauth_token, oauth_token_secret)
-                        user_client =oauth.Client(consumer, authorized_token)
-			if tweet_id:
-				q = urllib.urlencode({"status":status, "in_reply_to_status_id":tweet_id})
-			else:
-				q =urllib.urlencode({"status":status})
-			
-			resp, content = user_client.request(STATUS_UPDATE_URL, method="POST", body=q)
-		
-						     
-                        try:
-                                if resp['status'] != '200':
-                                        error_message = "Invalid response received: %s" % resp['status']
-                        except KeyError:
-                                raise Exception('Did not get a proper response')
-                        return HttpResponse('{"status":"Success"}')
-                else:
-                        return HttpResponse()
+	auth_status = check_auth(request)
+	if auth_status:
+		user_id = request.session['buzz_user_id']
 
-        else:
-                return HttpResponseRedirect(settings.BUZZFIRE_LOGIN_URL)
+		if request.method == 'POST':
+				status = request.POST['status']
+		if request.POST.has_key('tweet_id'):
+			tweet_id = request.POST['tweet_id']
+		else:
+			tweet_id =None
+					
+			conn = get_redis_conn()
+			user_dao = UserDao(conn)
+	
+			user = user_dao.get_user(user_id)
+			oauth_token = user.oauth_token
+			
+			oauth_token_secret = user.oauth_token_secret
+			authorized_token = oauth.Token(oauth_token, oauth_token_secret)
+			user_client =oauth.Client(consumer, authorized_token)
+		if tweet_id:
+			q = urllib.urlencode({"status":status, "in_reply_to_status_id":tweet_id})
+		else:
+			q =urllib.urlencode({"status":status})
+		
+		resp, content = user_client.request(STATUS_UPDATE_URL, method="POST", body=q)	 
+		try:
+			if resp['status'] != '200':
+				error_message = "Invalid response received: %s" % resp['status']
+			else:
+				return HttpResponse()
+		except KeyError:
+				raise Exception('Did not get a proper response')
+				return HttpResponse('{"status":"Success"}')
+	else:
+			return HttpResponseRedirect(settings.BUZZFIRE_LOGIN_URL)
