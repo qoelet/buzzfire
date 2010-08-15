@@ -18,11 +18,11 @@ def add(request):
             tweet_id = request.POST['tweet_id']
             tweet_txt = request.POST['tweet_txt']
             tweet_screenname = request.POST['tweeter_screenname']
-            if request.POST has_key('latitiude'):
+            if request.POST.has_key('latitude'):
                 latitude = request.POST['latitude']
             else:
                 latitude = None
-            if request.POST has_key('longitude'):
+            if request.POST.has_key('longitude'):
                 longitude = request.POST['longitude']
             else:
                 longitude =None
