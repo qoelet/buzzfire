@@ -246,3 +246,13 @@ class BookmarkDao:
                 bookmarks.append(self.get_bookmark(id))
         return bookmarks
 
+    def get_users_who_like_bookmark(self, bookmark_id):
+        if self._connection.exists("bookmark:%s:likes" %(bookmark_id)):
+            user_ids = self._connection.smembers("bookmark:%s:likes" %(bookmark_id))
+            users =[]
+            for user_id in user_ids:
+                users.append(self._connection.get("user:%s:screename" %(user_id)))
+            return users
+        else:
+            return []
+            

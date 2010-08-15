@@ -236,3 +236,16 @@ def get_bookmark_by_time(request):
     else:
         return HttpResponseRedirect(settings.BUZZFIRE_LOGIN_URL)
 
+def get_user_who_like_bookmark(request, bookmark_id):
+    oauth_status = check_auth(request)
+    if oauth_status:
+        conn = get_redis_conn()
+        bookmark_dao = BookmarkDao(conn)
+         if request.method =='GET':
+             users = bookmark_dao.get_user_who_like_bookmark(bookmark_id)
+             result = json.dumps(result)
+             return HttpResponse(result, content_type="application/json")
+         else:
+            return HttpResponse()
+    else:
+        return HttpResponseRedirect(settings.BUZZFIRE_LOGIN_URL)
