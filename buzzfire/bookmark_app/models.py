@@ -17,7 +17,7 @@ class Bookmark:
             tagstr="["
             for tag in obj.tags:
                 tagstr= tagstr+"'"+tag+"',"
-            if len(obj.tags)>1:
+            if len(obj.tags)>=1:
                 tagstr= tagstr[0:len(tagstr)-1]+"]"
             else:
                 tagstr=tagstr+"]"
