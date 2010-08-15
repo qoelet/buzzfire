@@ -228,7 +228,7 @@ My Buzz!
                 
                 function delete_handler() {
 	                  // add post handler
-	                  var del_posturl = '{% url mybuzz_delete_bookmarks %}';
+	                  var del_posturl = '/bookmark/delete/';
 	                  del_posturl += data[tweet].bookmark.id;
 	                  $('#del_' + bookmark_id).click(function(){
 	                      $.post(, $("#" + form_id).serialize(), function(data) {
