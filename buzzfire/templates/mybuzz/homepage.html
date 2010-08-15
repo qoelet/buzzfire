@@ -9,10 +9,10 @@ My Buzz!
 {% if buzz_auth %}
     <h1>My Buzz</h1>
     <h2 class="fleft">
-        <img src="{{ MEDIA_URL }}images/latest_tweets.gif">
+        <a id="view_latest_tweets" class="tooltip" title="View my latest tweet feeds!"><img src="{{ MEDIA_URL }}images/latest_tweets.gif"></a>
     </h2>
     <h2 class="fleft">
-        <img src="{{ MEDIA_URL }}images/mybookmarks_off.gif">
+        <a id="view_bookmarks" class="tooltip" title="View my bookmarks!"><img src="{{ MEDIA_URL }}images/my_bookmarks_off.gif"></a>
     </h2>
     <div class="clear"></div>
     <div id="mybuzz_timeline">
@@ -28,38 +28,57 @@ My Buzz!
 
 {% block script %}
     {% if buzz_auth %}
-    // Get user timeline
-    $.getJSON('{% url mybuzz_timeline %}', function(data) {
-        $('#loader').fadeOut('fast');
-        for(tweet in data) {
-            var form_id = 'bookmark_form_' + tweet;
-            var bookmark_id = 'bookmark_' + tweet;
-            
-            // append tweet
-            
-            $('#mybuzz_timeline').append('<div class="tweet_result"><div class="tweet">' + data[tweet].text +
-            '</div>' +
-            '<div class="tweet_info">' + 
-            '<div class="fleft"><img src="{{ MEDIA_URL }}images/user_ico.gif"></div>' +
-            '<div class="fleft padbottom">' + data[tweet].user.screen_name + '</div>' + 
-            '<div class="fleft padright"><a id="' + bookmark_id  + '"><img src=\"{{ MEDIA_URL }}images/bookmark_ico.png\"></a></div>' + 
-            '<div class="fleft padbottom red">bookmark me!</div>' +
-            '<form id="' + form_id + '"' + ' method="post">' +
-            '<input type="hidden" name="tweet_id" value="' + data[tweet].id + '">' +
-            '<input type="hidden" name="tweet_txt" value="' + data[tweet].text + '">' +
-            '<input type="hidden" name="tweeter_screenname" value="' + data[tweet].user.screen_name  + '">' +
-            '</form>' +
-            '<div class="clear"></div>'  + 
-            '</div></div>').fadeIn('slow');
-            
-            // add post handler
-            $('#' + bookmark_id).click(function(){
-                $.post('{% url mybuzz_add_bookmark %}', $("#" + form_id).serialize(), function(data) {
-                  alert(data);
-                });
-            });
-            
-        }
+    
+    // refresh data
+    $('#view_latest_tweets').click(function() {
+        $('#mybuzz_timeline').fadeOut('fast').empty().remove();
+        refresh_data();
     });
+    
+    // Get user timeline
+    function refresh_data() {
+        $.getJSON('{% url mybuzz_timeline %}', function(data) {
+            $('#loader').fadeOut('fast');
+            for(tweet in data) {
+                var form_id = 'bookmark_form_' + tweet;
+                var bookmark_id = 'bookmark_' + tweet;
+            
+                // append tweet
+            
+                $('#mybuzz_timeline').append('<div class="tweet_result"><div class="tweet">' + data[tweet].text +
+                '</div>' +
+                '<div class="tweet_info">' + 
+                '<div class="fleft"><img src="{{ MEDIA_URL }}images/user_ico.gif"></div>' +
+                '<div class="fleft padbottom">' + data[tweet].user.screen_name + '</div>' + 
+                '<div class="fleft padright"><a id="' + bookmark_id  + '"><img src=\"{{ MEDIA_URL }}images/bookmark_ico.png\"></a></div>' + 
+                '<div class="fleft padbottom red">bookmark me!</div>' +
+                '<form id="' + form_id + '"' + ' method="post">' +
+                '<input type="hidden" name="tweet_id" value="' + data[tweet].id + '">' +
+                '<input type="hidden" name="tweet_txt" value="' + data[tweet].text + '">' +
+                '<input type="hidden" name="tweeter_screenname" value="' + data[tweet].user.screen_name  + '">' +
+                '</form>' +
+                '<div class="clear"></div>'  + 
+                '</div></div>').fadeIn('slow');
+            
+                // add post handler
+                $('#' + bookmark_id).click(function(){
+                    $.post('{% url mybuzz_add_bookmark %}', $("#" + form_id).serialize(), function(data) {
+                      alert(data);
+                    });
+                });
+            
+                // hover 
+                $('#' + bookmark_id).hover(function(){
+                    $('#' + bookmark_id + ' img').attr('src','{{ MEDIA_URL }}images/bookmark_on_ico.png');
+                }, function() {
+                    $('#' + bookmark_id + ' img').attr('src','{{ MEDIA_URL }}images/bookmark_ico.png');
+                });
+            
+            }
+        });
+    }
+    
+    // load data
+    refresh_data();
     {% endif %}
 {% endblock %}
