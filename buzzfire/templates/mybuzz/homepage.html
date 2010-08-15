@@ -36,7 +36,7 @@ My Buzz!
             '<div class="tweet_info">' + 
             '<div class="fleft"><img src="{{ MEDIA_URL }}images/user_ico.gif"></div>' +
             '<div class="fleft padbottom">' + data[tweet].user.screen_name + '</div>' + 
-            '<div class="fleft"><a id="' + bookmark_id  + '"><img src="{{ MEDIA_URL }}images/bookmark_ico.gif"></div>' + 
+            '<div class="fleft"><a id="' + bookmark_id  + '"><img src=\"{{ MEDIA_URL }}images/bookmark_ico.gif\"></a></div>' + 
             '<form id="' + form_id + '"' + ' method="post">' +
             '<input type="hidden" name="tweet_id" value="' + data[tweet].id + '">' +
             '<input type="hidden" name="tweet_txt" value="' + data[tweet].text + '">' +
