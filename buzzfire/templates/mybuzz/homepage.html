@@ -115,14 +115,9 @@ My Buzz!
                 '<div class="tweet_info">' + 
                 '<div class="fleft"><img src="{{ MEDIA_URL }}images/user_ico.gif"></div>' +
                 '<div class="fleft padbottom">' + data[tweet].bookmark.tweeter_screenname + '</div>' + 
-                '<div class="fleft"><a id="' + bookmark_id  + '"><img src="{{ MEDIA_URL }}images/like_ico.gif"></a></div>' +
-                '<div class="fleft padbottom red">like me!</div>' +
-                '<form id="' + form_id + '"' + ' method="post">' +
-                '<input type="hidden" name="bookmark_id" value="' + data[tweet].bookmark.id + '">' +
-                '</form>' +
                 '<div class="clear"></div>'  + 
                 '</div></div>').fadeIn('slow');
-                
+                /*
                 function like_handler(bookmark_id) {
                     // add post handler
                     $('#' + bookmark_id).click(function(){
@@ -143,6 +138,7 @@ My Buzz!
                 }
                 
                 like_handler(bookmark_id);
+                */
             }
         });
     }
