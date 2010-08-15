@@ -85,7 +85,7 @@ def auth_user(request):
 	request.session['buzz_user_id'] = user_id
 	
 	# redirect to user homepage
-	return HttpResponse(settings.BUZZFIRE_USER_PAGE)
+	return HttpResponseRedirect(settings.BUZZFIRE_USER_PAGE)
 
 def mybuzz(request):
 	auth_status = check_auth(request)
