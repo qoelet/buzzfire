@@ -209,8 +209,9 @@ class BookmarkDao:
             
         bookmark_ids = self.connection.zrange("bookmark:byscore:bookmarks", offset, str(int(offset)+int(length)))
         bookmarks=[]
-        for id in bookmark_ids:
-            bookmark.append(self.get_bookmark(id))
+        if bookmark_ids:
+            for id in bookmark_ids:
+                bookmark.append(self.get_bookmark(id))
         return bookmarks
 
     def get_user_bookmark_by_rank(self, user_id, offset='0', length='-1'):
@@ -226,3 +227,22 @@ class BookmarkDao:
         return bookmarks
                                               
     
+    def get_bookmark_global_rank(self, bookmark_id):
+        rank = self._connection.zrank("bookmark:byscore:bookmarks", bookmark_id)
+        return rank
+
+    def get_bookmark_user_rank(self, user_id, bookmark_id):
+        rank = self._connection.zrank("user:%s:byscore:bookmarks" %(user_id), bookmark_id)
+        return rank
+
+    def get_bookmark_by_time(self, offset='0', length='-1'):
+        if int(length)<0:
+            length = self._connection.zcard("bookmark:bytime:bookmarks")
+            
+        bookmark_ids = self.connection.zrange("bookmark:bytime:bookmarks", offset, str(int(offset)+int(length)))
+        bookmarks=[]
+        if(bookmark_ids):
+            for id in bookmark_ids:
+                bookmark.append(self.get_bookmark(id))
+        return bookmarks
+

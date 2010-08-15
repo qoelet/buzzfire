@@ -27,8 +27,11 @@ urlpatterns = patterns('',
     url(r'^bookmark/untag/(\w+)$', 'buzzfire.bookmark_app.views.untag_bookmark'),                      
     url(r'^bookmark/delete/(\w+)$', 'buzzfire.bookmark_app.views.delete_bookmark'),   
     url(r'^bookmark/like/(\w+)$', 'buzzfire.bookmark_app.views.like_bookmark'),      
-    url(r'^bookmark/rank/(\w+)$', 'buzzfire.bookmark_app.views.get_bookmark_by_rank'),
+    url(r'^bookmark/rank/$', 'buzzfire.bookmark_app.views.get_bookmark_by_rank'),
     url(r'^bookmark/rank/user/(\w+)$', 'buzzfire.bookmark_app.views.get_user_bookmark_by_rank'), 
+    url(r'^bookmark/time/$', 'buzzfire.bookmark_app.views.get_bookmark_by_time'),
+    url(r'^bookmark/globalranking/(\w+)$', 'buzzfire.bookmark_app.views.get_global_bookmark_rank'),
+    url(r'^bookmark/userranking/(\w+)$', 'buzzfire.bookmark_app.views.get_user_bookmark_rank'), 
     # user_page
     url(r'^mybuzz/$', 'buzzfire.twitter_app.views.mybuzz'),
     
