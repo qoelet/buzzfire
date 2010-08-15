@@ -255,3 +255,8 @@ div#more {
     -moz-border-radius: 5px;
     border-radius: 5px;
 }
+
+/* others */
+#loader {
+	text-align:center;
+}
