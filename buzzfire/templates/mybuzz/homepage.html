@@ -6,14 +6,22 @@ My Buzz!
 
 
 {% block content %}
-
+{% if buzz_auth %}
+    <h2>My Buzz</h2>
+    <p>You're signed in!</p>
+{% else %}
+    <h2>You need to sign in!</h2>
+    <p><a href="/login/">Click here to sign here</a></p>
+{% endif %}
 {% endblock %}
 
 {% block script %}
+    {% if buzz_auth %}
     // Get user timeline
     $.getJSON('{% url mybuzz_timeline %}', function(data) {
         $.each(data.items, function(i, item){
             alert(item);
         });
     });
+    {% endif %}
 {% endblock %}

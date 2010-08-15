@@ -88,8 +88,14 @@ def auth_user(request):
 	return HttpResponse(settings.BUZZFIRE_USER_PAGE)
 
 def mybuzz(request):
+	auth_status = check_auth(request)
+	
+	if auth_status:
+		buzz_auth = True
+	else:
+		buzz_auth = None
 	# Get user's timeline
-	return render_to_response('mybuzz/homepage.html', {}, context_instance=RequestContext(request))
+	return render_to_response('mybuzz/homepage.html', {'buzz_auth':buzz_auth}, context_instance=RequestContext(request))
 
 # DATA GET VIEWS
 
