@@ -15,6 +15,7 @@ ACCESS_TOKEN_URL = "http://twitter.com/oauth/access_token"
 AUTHORIZE_URL = "http://twitter.com/oauth/authorize"
 USER_TIMELINE_URL ="http://api.twitter.com/1/statuses/home_timeline.json"
 SEARCH_URL="http://search.twitter.com/search.json?result_type=mixed"
+STATUS_UPDATE_URL="http://api.twitter.com/1/statuses/update.json"
 
 # AUTH VIEWS
 consumer = oauth.Consumer(buzz_secrets.CONSUMER_KEY, buzz_secrets.CONSUMER_SECRET)
@@ -142,3 +143,34 @@ def search(request, query_string):
 		return HttpResponseRedirect(settings.BUZZFIRE_LOGIN_URL)
 
                 
+
+def update_status(request):
+        auth_status = check_auth(request)
+        if auth_status:
+                user_id = request.session['buzz_user_id']
+                if request.method == 'POST':
+                        status = request.POST['status']
+                        tweet_id = request.POST['tweet_id']
+                        
+                        conn = get_redis_conn()
+                        user_dao = UserDao(conn)
+                
+                        user = user_dao.get_user(user_id)
+                        oauth_token = user.oauth_token
+                        
+                        oauth_token_secret = user.oauth_token_secret
+                        authorized_token = oauth.Token(oauth_token, oauth_token_secret)
+                        user_client =oauth.Client(consumer, authorized_token)
+                        q = urllib2.urlencode({"status":status, "in_reply_to_status_id":tweet_id})
+                        resp, content = user_client.request(STATUS_UPDATE_URL, method="POST", body=q)
+                        try:
+                                if resp['status'] != '200':
+                                        error_message = "Invalid response received: %s" % resp['status']
+                        except KeyError:
+                                raise Exception('Did not get a proper response')
+                        return HttpResponse('{"status":"Success"}')
+                else:
+                        return HttpResponse()
+
+        else:
+                return HttpResponseRedirect(settings.BUZZFIRE_LOGIN_URL)
