@@ -106,6 +106,7 @@ class BookmarkDao:
     def tag_bookmark(self, tag, bookmark_id):
         self._connection.sadd("tag:%s:bookmarks" %(tag), bookmark_id)
         self._connection.sadd("bookmark:%s:tags" %(bookmark_id), tag)
+        self._connection.sadd("tag:members", tag)
 
     def untag_bookmark(self, tag, bookmark_id):
         self._connection.srem("tag:%s:bookmarks" %(tag), bookmark_id)
@@ -122,7 +123,7 @@ class BookmarkDao:
         return bookmarks
 
     def like_bookmark(self, user_id, bookmark_id):
-        if not self._connection.sismember("bookmark:%s:likes" %(bookmark_id), user_id) and self._connection.sismember("user:%s:bookmark_set" %(user_id), bookmark_id):
+        if not self._connection.sismember("bookmark:%s:likes" %(bookmark_id), user_id) and not self._connection.sismember("user:%s:bookmark_set" %(user_id), bookmark_id):
             # get total number of bookmark which user in this month
             current_month = datetime.datetime.now()
             if (self._connection.exists("user:%s:%s:total_bookmarks" %(user_id, current_month.strftime("%Y-%m")))):
@@ -173,8 +174,9 @@ class BookmarkDao:
             #add the bookmark to the list of bookmark of the owner which other ppl like
             self._connection.sadd("user:%s:likedbookmarks" %(owner_id), bookmark_id)
             # update the score of the bookmark
+            
             self._connection.zadd("bookmark:byscore:bookmarks", bookmark_id, score_bookmark)
-            self._connection.zadd("user:%s:byscore:bookmarks" owner_id, bookmark_id, score_bookmark)
+            self._connection.zadd("user:%s:byscore:bookmarks" %(owner_id), bookmark_id, score_bookmark)
             #add one more bookmark to the bookmark that user like
             self._connection.sadd("user:%s:likes" %(user_id), bookmark_id)
             
@@ -215,10 +217,12 @@ class BookmarkDao:
         if int(length)<0:
             length = self._connection.zcard("user:%s:byscore:bookmarks")
             
-        bookmark_ids = self.connection.zrange("user:%s:byscore:bookmarks" %(user_id), offset, str(int(offset)+int(length)))
+        bookmark_ids = self._connection.zrange("user:%s:byscore:bookmarks" %(user_id), offset, str(int(offset)+int(length)))
+        
         bookmarks=[]
-        for id in bookmark_ids:
-            bookmark.append(self.get_bookmark(id))
+        if (bookmark_ids):
+            for id in bookmark_ids:
+                bookmarks.append(self.get_bookmark(id))
         return bookmarks
                                               
     
