@@ -1,4 +1,4 @@
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 
 import urlparse
 import oauth2 as oauth
@@ -46,9 +46,14 @@ def logout(request):
 
 def auth_user(request):
 	token = oauth.Token(request.session['request_token']['oauth_token'], request.session['request_token']['oauth_token_secret'])
+
+	auth_client = oauth.Client(consumer, token)
 	
-	resp, content = client.request(ACCESS_TOKEN_URL, "GET")
-	if resp['status'] != 200:
+	resp, content = auth_client.request(ACCESS_TOKEN_URL, "GET")
+
+
+	if resp['status'] != '200':
+		
 		raise Exception("Invalid response from Twitter.")
         
 	access_token = dict(urlparse.parse_qsl(content))
