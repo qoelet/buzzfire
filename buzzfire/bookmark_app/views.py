@@ -14,7 +14,7 @@ def add(request):
         conn = get_redis_conn()
         bookmark_dao = BookmarkDao(conn)
         if request.method == 'POST':
-            owner_id = request.POST['owner_id']
+            owner_id = request.session['buzz_user_id']
             tweet_id = request.POST['tweet_id']
             tweet_txt = request.POST['tweet_txt']
             tweeter_screenname = request.POST['tweeter_screenname']
@@ -32,7 +32,7 @@ def add(request):
             if id:
                 bookmark = bookmark_dao.get_bookmark(id)
                 result = json.dumps(bookmark, default=Bookmark.json_encode)
-                return HttpResponse(result)
+                return HttpResponse(result, content_type = "application/json")
             else:
                 result ='{"status":"error"}'
                 return HttpResponse(result)
@@ -57,7 +57,7 @@ def get_user_bookmark(request, user_id):
                 length =-1
             bookmarks = bookmark_dao.get_bookmark_of_user(user_id, offset, length)
             result  = json.dumps(bookmarks, default=Bookmark.json_encode)
-            return HttpResponse(result)
+            return HttpResponse(result, content_type = "application/json")
         else:
             return HttpResponse()
     else:
@@ -71,7 +71,7 @@ def tag_bookmark(request, bookmark_id):
         if request.method == 'POST':
             tag = request.POST['tag']
             bookmark_dao.tag_bookmark(tag, bookmark_id)
-            return HttpResponse(tag)
+            return HttpResponse(tag, content_type = "application/json")
         else:
             return HttpResponse()
     else:
@@ -85,7 +85,7 @@ def untag_bookmark(request, bookmark_id):
         if request.method == 'POST':
             tag = request.POST['tag']
             bookmark_dao.untag_bookmark(tag, bookmark_id)
-            return HttpResponse(tag)
+            return HttpResponse(tag, content_type = "application/json")
         else:
             return HttpResponse()
     else:
@@ -99,9 +99,9 @@ def delete_bookmark(request, bookmark_id):
         if request.method == 'POST':
             status = bookmark_dao.delete(bookmark_id)
             if status:
-                  return HttpResponse('{"status":"Success"}')
+                  return HttpResponse('{"status":"Success"}', content_type = "application/json")
             else:
-                return HttpResponse('{"status":"Error"}')
+                return HttpResponse('{"status":"Error"}', content_type = "application/json")
         else:
             return HttpResponse()
     else:
