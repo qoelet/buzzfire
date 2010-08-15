@@ -23,6 +23,7 @@ My Buzz!
     // Get user timeline
     $.getJSON('{% url mybuzz_timeline %}', function(data) {
         for(tweet in data) {
+            console.log(data[tweet]);
             $('#mybuzz_timeline').append('<p>' + data[tweet].description + '</p>');
         }
     });
