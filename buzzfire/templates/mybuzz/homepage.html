@@ -42,6 +42,7 @@ My Buzz!
             for(tweet in data) {
                 var form_id = 'bookmark_form_' + tweet;
                 var bookmark_id = 'bookmark_' + tweet;
+                var that = this;
             
                 // append tweet
             
@@ -59,21 +60,24 @@ My Buzz!
                 '</form>' +
                 '<div class="clear"></div>'  + 
                 '</div></div>').fadeIn('slow');
-            
-                // add post handler
-                $('#' + bookmark_id).click(function(){
-                    $.post('{% url mybuzz_add_bookmark %}', $("#" + form_id).serialize(), function(data) {
-                      alert(data);
+                
+                function add_handler(bookmark_id, form_id) {
+                    // add post handler
+                    $('#' + bookmark_id).click(function(){
+                        $.post('{% url mybuzz_add_bookmark %}', $("#" + form_id).serialize(), function(data) {
+                          alert(data);
+                        });
                     });
-                });
             
-                // hover 
-                $('#' + bookmark_id).hover(function(){
-                    $('#' + bookmark_id + ' img').attr('src','{{ MEDIA_URL }}images/bookmark_on_ico.png');
-                }, function() {
-                    $('#' + bookmark_id + ' img').attr('src','{{ MEDIA_URL }}images/bookmark_ico.png');
-                });
-            
+                    // hover 
+                    $('#' + bookmark_id).hover(function(){
+                        $('#' + bookmark_id + ' img').attr('src','{{ MEDIA_URL }}images/bookmark_on_ico.png');
+                    }, function() {
+                        $('#' + bookmark_id + ' img').attr('src','{{ MEDIA_URL }}images/bookmark_ico.png');
+                    });
+                }
+                
+                add_handler(bookmark_id, form_id);
             }
         });
     }
