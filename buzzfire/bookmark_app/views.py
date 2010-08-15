@@ -45,6 +45,8 @@ def get_user_bookmark(request, user_id=None):
     oauth_status = check_auth(request)
     if oauth_status:
     
+		print user_id
+		
         if user_id == None:
             user_id = request.session['buzz_user_id']
         
