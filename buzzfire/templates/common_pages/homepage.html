@@ -36,17 +36,24 @@ bookmark and rank your favorite tweets today!
 	// latest bookmarks
 	var getbookmarks_url = '{% url latest_bookmarks %}';
 	getbookmarks_url += '?offset=0&length=10';
-	$.getJSON(getbookmarks_url, function(data) {
-		alert('got latest bookmarks');
-		for(tweet in data) {
-			var form_id;
-            //console.log(data[tweet].bookmark.tweet_txt);
-        }
-	});
+	
+	function getlatestbookmarks() {
+		$.getJSON(getbookmarks_url, function(data) {
+			alert('got latest bookmarks');
+			for(tweet in data) {
+				var form_id;
+	            //console.log(data[tweet].bookmark.tweet_txt);
+	        }
+		});
+	}
 	
 	// top tweets
 	var gettoptweets_url = '{% url top_tweets %}';
 	gettoptweets_url += '?offset=0&length=10';
+	
+	$('#get_top_tweets').click(function() {
+		toptweets();
+	});
 	
 	function toptweets() {
 		$.getJSON(gettoptweets_url, function(data) {
@@ -61,7 +68,7 @@ bookmark and rank your favorite tweets today!
                 '</div>' +
                 '<div class="tweet_info">' + 
                 '<div class="fleft"><img src="{{ MEDIA_URL }}images/user_ico.gif"></div>' +
-                '<div class="fleft padbottom">' + data['results'][tweet].from_user + '</div>' + 
+                '<div class="fleft padbottom">' + data[tweet].bookmark.tweeter_screenname + '</div>' + 
 				'<div class="fleft padright"><a id="like_' + bookmark_id  + '"><img src=\"{{ MEDIA_URL }}images/bookmark_ico.png\"></a></div>' + 
                 '<div class="fleft padbottom red">like me!</div>' +
                 '<div class="fleft padright"><a id="' + bookmark_id  + '"><img src=\"{{ MEDIA_URL }}images/bookmark_ico.png\"></a></div>' + 
@@ -114,8 +121,6 @@ bookmark and rank your favorite tweets today!
 			}
 		});
 	}
-	
-	toptweets();
 	
 	// search 
     $('#searchbutton').click(function() {
