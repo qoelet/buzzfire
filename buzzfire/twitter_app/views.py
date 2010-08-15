@@ -6,6 +6,7 @@ from django.template import RequestContext
 import urlparse
 import oauth2 as oauth
 import urllib
+import simplejson as json
 
 from buzzfire.twitter_app.models import User
 from buzzfire.twitter_app.dao import UserDao
