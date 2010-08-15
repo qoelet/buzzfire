@@ -171,13 +171,14 @@ def get_user_bookmark_by_rank(request, user_id):
         return HttpResponseRedirect(settings.BUZZFIRE_LOGIN_URL)
 
 
-def get_user_bookmark_rank(request, user_id, bookmark_id):
+def get_user_bookmark_rank(request, bookmark_id):
     oauth_status = check_auth(request)
     if oauth_status:
         conn = get_redis_conn()
         bookmark_dao = BookmarkDao(conn)
         if request.method =='GET':
-            rank = bookmark_dao.get_user_bookmark_by_rank(user_id, bookmark_id)
+            user_id =request.session['buzz_user_id']
+            rank = bookmark_dao.get_bookmark_user_rank(user_id, bookmark_id)
             if rank:
                 return HttpResponse(rank, content_type = "application/json")
             else:
@@ -188,12 +189,16 @@ def get_user_bookmark_rank(request, user_id, bookmark_id):
         return HttpResponseRedirect(settings.BUZZFIRE_LOGIN_URL)
 
 def get_global_bookmark_rank(request, bookmark_id):
+    
     oauth_status = check_auth(request)
     if oauth_status:
         conn = get_redis_conn()
         bookmark_dao = BookmarkDao(conn)
+       
         if request.method =='GET':
-            rank = bookmark_dao.get_bookmark_by_rank(bookmark_id)
+           
+            rank = bookmark_dao.get_bookmark_global_rank(bookmark_id)
+        
             if rank:
                 return HttpResponse(rank, content_type = "application/json")
             else:
