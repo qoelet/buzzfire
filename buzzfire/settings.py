@@ -88,6 +88,10 @@ INSTALLED_APPS = (
 	'buzzfire.comment_app',
 )
 
+SESSION_ENGINE='django.contrib.sessions.backends.cache'
+CACHE_BACKEND = 'twittertest.redis_cache.cache://localhost:6379'
+
+
 # Extras
 BUZZFIRE_LOGIN_URL = '/login/'
 BUZZFIRE_HOME_PAGE = '/'
