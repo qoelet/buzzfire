@@ -7,8 +7,11 @@ My Buzz!
 
 {% block content %}
 {% if buzz_auth %}
-    <h2>My Buzz</h2>
-    <p>You're signed in!</p>
+    <h1>My Buzz</h1>
+    <h2>Latest Tweets</h2>
+    <div id="mybuzz_timeline">
+        
+    </div>
 {% else %}
     <h2>You need to sign in!</h2>
     <p><a href="/login/">Click here to sign here</a></p>
@@ -19,9 +22,9 @@ My Buzz!
     {% if buzz_auth %}
     // Get user timeline
     $.getJSON('{% url mybuzz_timeline %}', function(data) {
-        $.each(data.items, function(i, item){
-            alert(item);
-        });
+        for(tweet in data) {
+            $('#mybuzz_timeline').append('<p>' + tweet.text + '</p>');
+        }
     });
     {% endif %}
 {% endblock %}
