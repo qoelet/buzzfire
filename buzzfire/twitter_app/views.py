@@ -129,8 +129,8 @@ def search(request, query_string):
                 oauth_token_secret = user.oauth_token_secret
                 authorized_token = oauth.Token(oauth_token, oauth_token_secret)
                 user_client =oauth.Client(consumer, authorized_token)
-                q = urllib.urlencode(query_string)
-                search_url = SEARCH_URL+"&q="+q
+                q = urllib.urlencode({"q":query_string})
+                search_url = SEARCH_URL+"&"+q
                 resp, content = user_client.request(search_url)
                 try:
                         if resp['status'] != '200':
