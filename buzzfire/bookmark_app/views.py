@@ -47,7 +47,15 @@ def get_user_bookmark(request, user_id):
         conn = get_redis_conn()
         bookmark_dao = BookmarkDao(conn)
         if request.method =='GET':
-            bookmarks = bookmark_dao.get_bookmark_of_user(user_id)
+            if request.GET.has_key("offset"):
+                offset = request.GET['offset']
+            else:
+                offset = 0
+            if request.GET.has_key("length"):
+                length = request.GET['length']
+            else:
+                length =-1
+            bookmarks = bookmark_dao.get_bookmark_of_user(user_id, offset, length)
             result  = json.dumps(bookmarks, default=Bookmark.json_encode)
             return HttpResponse(result)
         else:
@@ -68,5 +76,35 @@ def tag_bookmark(request, bookmark_id):
             return HttpResponse()
     else:
         return HttpResponseRedirect(settings.BUZZFIRE_LOGIN_URL)
-
- 
+    
+def untag_bookmark(request, bookmark_id):
+    oauth_status = check_auth(request)
+    if oauth_status:
+        conn = get_redis_conn()
+        bookmark_dao = BookmarkDao(conn)
+        if request.method == 'POST':
+            tag = request.POST['tag']
+            bookmark_dao.untag_bookmark(tag, bookmark_id)
+            return HttpResponse(tag)
+        else:
+            return HttpResponse()
+    else:
+        return HttpResponseRedirect(settings.BUZZFIRE_LOGIN_URL)
+    
+def delete_bookmark(request, bookmark_id):
+    oauth_status = check_auth(request)
+    if oauth_status:
+        conn = get_redis_conn()
+        bookmark_dao = BookmarkDao(conn)
+        if request.method == 'POST':
+            status = bookmark_dao.delete(bookmark_id)
+            if status:
+                  return HttpResponse('{"status":"Success"}')
+            else:
+                return HttpResponse('{"status":"Error"}')
+        else:
+            return HttpResponse()
+    else:
+        return HttpResponseRedirect(settings.BUZZFIRE_LOGIN_URL)
+            
+            

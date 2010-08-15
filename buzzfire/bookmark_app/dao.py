@@ -69,9 +69,11 @@ class BookmarkDao:
                 self.delete(key)
         
 
-    def get_bookmark_of_user(self, user_id):
+    def get_bookmark_of_user(self, user_id, offset=0, length=-1):
         if self._connection.exists("user:%s:bookmarks" %(user_id)):
-            bookmark_ids = self._connection.lrange("user:%s:bookmarks" %(user_id), 0, self._connection.llen("user:%s:bookmarks" %(user_id)))
+            if length<=-1:
+                length = self._connection.llen("user:%s:bookmarks" %(user_id))
+            bookmark_ids = self._connection.lrange("user:%s:bookmarks" %(user_id), offset, offset+length)
             bookmarks= []
             for id in bookmark_ids:
                 bookmark = self.get_bookmark(id)
@@ -103,7 +105,10 @@ class BookmarkDao:
         self._connection.sadd("tag:%s:bookmarks" %(tag), bookmark_id)
         self._connection.sadd("bookmark:%s:tags" %(bookmark_id), tag)
 
-
+    def untag_bookmark(self, tag, bookmark_id):
+        self._connection.srem("tag:%s:bookmarks" %(tag), bookmark_id)
+        self._connection.srem("bookmark:%s:tags" %(bookmark_id), tag)
+        
     def get_bookmark_by_tag(self, *tags):
         tag_keys=[]
         for tag in tags:
