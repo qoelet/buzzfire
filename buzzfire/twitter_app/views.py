@@ -93,10 +93,12 @@ def mybuzz(request):
 	
 	if auth_status:
 		buzz_auth = True
+		buzz_id = request.session['buzz_user_id']
 	else:
 		buzz_auth = None
+		buzz_id = None
 	
-	return render_to_response('mybuzz/homepage.html', {'buzz_auth':buzz_auth}, context_instance=RequestContext(request))
+	return render_to_response('mybuzz/homepage.html', {'buzz_auth':buzz_auth, 'buzz_id':buzz_id}, context_instance=RequestContext(request))
 
 # DATA GET VIEWS
 
