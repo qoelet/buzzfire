@@ -23,7 +23,7 @@ urlpatterns = patterns('',
                        
     url(r'^bookmark/add/$', 'buzzfire.bookmark_app.views.add'),
     url(r'^bookmark/user/(\w+)$', 'buzzfire.bookmark_app.views.get_user_bookmark'),
-                  
+    url(r'^bookmark/tag/(\w+)$', 'buzzfire.bookmark_app.views.tag_bookmark'),                      
     # user_page
     url(r'^mybuzz/$', 'buzzfire.twitter_app.views.mybuzz'),
     

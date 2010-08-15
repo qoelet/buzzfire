@@ -54,4 +54,19 @@ def get_user_bookmark(request, user_id):
             return HttpResponse()
     else:
         return HttpResponseRedirect(settings.BUZZFIRE_LOGIN_URL)
+
+def tag_bookmark(request, bookmark_id):
+    oauth_status = check_auth(request)
+    if oauth_status:
+        conn = get_redis_conn()
+        bookmark_dao = BookmarkDao(conn)
+        if request.method == 'POST':
+            tag = request.POST['tag']
+            bookmark_dao.tag_bookmark(tag, bookmark_id)
+            return HttpResponse(tag)
+        else:
+            return HttpResponse()
+    else:
+        return HttpResponseRedirect(settings.BUZZFIRE_LOGIN_URL)
+
  
