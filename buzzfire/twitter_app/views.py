@@ -1,4 +1,5 @@
 from django.http import HttpResponseRedirect, HttpResponse
+from django.views.decorators.csrf import csrf_protect
 
 import urlparse
 import oauth2 as oauth
@@ -71,7 +72,7 @@ def auth_user(request):
 
 		screen_name = access_token['screen_name']
 		new_user = User(screen_name, user_id, oauth_token_secret=access_token['oauth_token_secret'], oauth_token=access_token['oauth_token'])
-		user_dao.save(new_user)
+		user_id=user_dao.save(new_user)
 	else:
 		# update existing user
 		user = user_dao.get_user(user_id)
@@ -148,9 +149,13 @@ def update_status(request):
         auth_status = check_auth(request)
         if auth_status:
                 user_id = request.session['buzz_user_id']
+		
                 if request.method == 'POST':
                         status = request.POST['status']
-                        tweet_id = request.POST['tweet_id']
+			if request.POST.has_key('tweet_id'):
+				tweet_id = request.POST['tweet_id']
+			else:
+				tweet_id =None
                         
                         conn = get_redis_conn()
                         user_dao = UserDao(conn)
@@ -161,8 +166,14 @@ def update_status(request):
                         oauth_token_secret = user.oauth_token_secret
                         authorized_token = oauth.Token(oauth_token, oauth_token_secret)
                         user_client =oauth.Client(consumer, authorized_token)
-                        q = urllib2.urlencode({"status":status, "in_reply_to_status_id":tweet_id})
-                        resp, content = user_client.request(STATUS_UPDATE_URL, method="POST", body=q)
+			if tweet_id:
+				q = urllib.urlencode({"status":status, "in_reply_to_status_id":tweet_id})
+			else:
+				q =urllib.urlencode({"status":status})
+			
+			resp, content = user_client.request(STATUS_UPDATE_URL, method="POST", body=q)
+		
+						     
                         try:
                                 if resp['status'] != '200':
                                         error_message = "Invalid response received: %s" % resp['status']
