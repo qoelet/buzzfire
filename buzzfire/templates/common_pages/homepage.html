@@ -26,28 +26,7 @@ bookmark and rank your favorite tweets today!
 </div>
 <div id="top_tweets_box" class="clear">
     <div id="top_tweets_results">
-        {% comment %} top N results will go here {% endcomment %}
-        <div class="tweet_result">
-            <div class="tweet">
-                "Django Dash is now on!"
-            </div>
-            <div class="tweet_info">
-                <div class="fleft"><img src="{{ MEDIA_URL }}images/user_ico.gif"></div>
-                <div class="fleft padbottom">someone</div>
-                <div class="fleft padright"><img src="{{ MEDIA_URL }}images/like_ico.gif"></div>
-                <div class="fleft padbottom red">135</div>
-                <div class="fleft padright"><img src="{{ MEDIA_URL }}images/comment_ico.gif"></div>
-                <div class="fleft padbottom">12 comments</div>
-                <div class="clear"></div>
-            </div>
-        </div>
-        <div id="more"><a href="#" title="Click to view more popular tweets!" class="tooltip">more</a></div>
-    </div>
-</div>
-<div id="latest_bookmarks_box" class="clear">
-    <img src="{{ MEDIA_URL }}images/latest_bookmarks.gif">
-    <div id="latest_bookmarks_results">
-		
+        <div class="tweet_result"></div>
     </div>
 </div>
 
@@ -58,6 +37,7 @@ bookmark and rank your favorite tweets today!
 	var getbookmarks_url = '{% url latest_bookmarks %}';
 	getbookmarks_url += '?offset=0&length=10';
 	$.getJSON(getbookmarks_url, function(data) {
+		alert('got latest bookmarks');
 		for(tweet in data) {
 			var form_id;
             //console.log(data[tweet].bookmark.tweet_txt);
@@ -70,13 +50,14 @@ bookmark and rank your favorite tweets today!
 	
 	function toptweets() {
 		$.getJSON(gettoptweets_url, function(data) {
+			alert('got top tweets');
 			for(tweet in data) {
 				var form_id = 'bookmark_form_' + tweet;
                 var bookmark_id = 'bookmark_' + tweet;
                 var that = this;
 				
 				// append tweet
-				$('#top_tweets_box').append('<div class="tweet_result"><div class="tweet">' + data[tweet].bookmark.tweet_txt +
+				$('#top_tweets_results').append('<div class="tweet_result"><div class="tweet">' + data[tweet].bookmark.tweet_txt +
                 '</div>' +
                 '<div class="tweet_info">' + 
                 '<div class="fleft"><img src="{{ MEDIA_URL }}images/user_ico.gif"></div>' +
