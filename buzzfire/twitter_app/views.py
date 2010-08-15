@@ -15,11 +15,12 @@ AUTHORIZE_URL = "http://twitter.com/oauth/authorize"
 USER_TIMELINE_URL =" http://api.twitter.com/1/statuses/home_timeline.json"
 
 # AUTH VIEWS
+ consumer = oauth.Consumer(buzz_secrets.CONSUMER_KEY, buzz_secrets.CONSUMER_SECRET)
+ client = oauth.Client(consumer)
+
 
 def login(request):	
-        consumer = oauth.Consumer(buzz_secrets.CONSUMER_KEY, buzz_secrets.CONSUMER_SECRET)
-        client = oauth.Client(consumer)
-
+       
         # Get request token
         resp, content = client.request(REQUEST_TOKEN_URL, "GET")
 	try:
@@ -89,8 +90,8 @@ def get_timeline(request):
                 oauth_token = user.oauth_token
                 oauth_token_secret = user.oauth_token_secret
                 authorized_token = oauth.Token(oauth_token, oauth_token_secret)
-                client =oauth.Client(consumer, authorized_token)
-                resp, content = client.request(USER_TIMELINE_URL)
+                user_client =oauth.Client(consumer, authorized_token)
+                resp, content = user_client.request(USER_TIMELINE_URL)
                 try:
                         if resp['status'] != '200':
                                 error_message = "Invalid response received: %s" % resp['status']
