@@ -17,8 +17,12 @@ bookmark and rank your favorite tweets today!
     Sorry, you need to sign in before you can search and use BuzzFire.
 </div>
 <div id="tweets_nav" class="clear">
-	<div class="fleft"><img src="{{ MEDIA_URL }}images/top_tweets.gif"></div>
-	<div class="fleft"><img src="{{ MEDIA_URL }}images/latest_bookmarks_off.gif"></div>
+	<h2 class="fleft">
+		<a id="get_top_tweets" class="tooltip" title="Get the top ranked tweets!"><img src="{{ MEDIA_URL }}images/top_tweets.gif"></a>
+	</h2>
+	<h2 class="fleft">
+		<a id="get_latest_bookmarks" class="tooltip" title="Get the latest bookmarks!"><img src="{{ MEDIA_URL }}images/latest_bookmarks_off.gif"></a>
+	</h2>
 </div>
 <div id="top_tweets_box" class="clear">
     <div id="top_tweets_results">
@@ -58,6 +62,13 @@ bookmark and rank your favorite tweets today!
 			var form_id;
             console.log(data[tweet].bookmark.tweet_txt);
         }
+	});
+	
+	// top tweets
+	var gettoptweets_url = '{% url top_tweets %}';
+	gettoptweets_url += '?offset=0&length=10';
+	$.getJSON(gettoptweets_url, function(data) {
+		alert('got top tweets');
 	});
 	
 	// search 
