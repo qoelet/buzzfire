@@ -90,7 +90,7 @@ def get_timeline(request):
                 oauth_token_secret = user.oauth_token_secret
                 authorized_token = oauth.Token(oauth_token, oauth_token_secret)
                 client =oauth.Client(consumer, authorized_token)
-                resp, content = client.request.(USER_TIMELINE_URL)
+                resp, content = client.request(USER_TIMELINE_URL)
                 try:
                         if resp['status'] != '200':
                                 error_message = "Invalid response received: %s" % resp['status']
