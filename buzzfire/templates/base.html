@@ -17,9 +17,15 @@
                     <div id="faq_btn" class="rightie">
                         <a href="/faq/" class="tooltip" title="All you need to know about BuzzFire!">FAQ</a>
                     </div>
+                    {% if buzz_auth %}
                     <div id="signin_btn" class="rightie">
-                        <a href="/faq/" class="tooltip" title="You'll be redirected to Twitter to login.">Sign In</a>
+                        <a href="/logout/" class="tooltip" title="You'll be redirected to Twitter to login.">Sign Out</a>
                     </div>
+                    {% else %}
+                    <div id="signin_btn" class="rightie">
+                        <a href="/login/" class="tooltip" title="You'll be redirected to Twitter to login.">Sign In</a>
+                    </div>
+                    {% endif %}
                 </div>
                 <div id="buzzbirdie">
                     <a class="tooltip" title="churpideedooponydwadash!"><img src="{{ MEDIA_URL }}images/buzzbirdie.png"></a>
