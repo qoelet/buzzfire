@@ -33,6 +33,7 @@ urlpatterns = patterns('',
     url(r'^bookmark/time/$', 'buzzfire.bookmark_app.views.get_bookmark_by_time'),
     url(r'^bookmark/globalranking/(\w+)$', 'buzzfire.bookmark_app.views.get_global_bookmark_rank'),
     url(r'^bookmark/userranking/(\w+)$', 'buzzfire.bookmark_app.views.get_user_bookmark_rank'), 
+    url(r'^bookmark/user/like/(\w+)$', 'buzzfire.bookmark_app.views.get_user_who_like_bookmark'), 
     # user_page
     url(r'^mybuzz/$', 'buzzfire.twitter_app.views.mybuzz'),
     
