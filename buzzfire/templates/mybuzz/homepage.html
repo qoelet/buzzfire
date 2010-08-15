@@ -65,10 +65,9 @@ My Buzz!
                 function add_handler(bookmark_id, form_id) {
                     // add post handler
                     $('#' + bookmark_id).click(function(){
-                        // $.post('{% url mybuzz_add_bookmark %}', $("#" + form_id).serialize(), function(data) {
-                        //  alert(data);
-                        // });
-                        alert(form_id);
+                        $.post('{% url mybuzz_add_bookmark %}', $("#" + form_id).serialize(), function(data) {
+                            alert(data);
+                        });
                     });
             
                     // hover 

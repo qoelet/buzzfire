@@ -127,9 +127,10 @@ def get_timeline(request):
 		return HttpResponseRedirect(settings.BUZZFIRE_LOGIN_URL)
 
 
-def search(request, query_string):
+def search(request):
 	auth_status = check_auth(request)
 	if auth_status:
+		query_string = request.GET.get('q')
 		user_id = request.session['buzz_user_id']
 		
 		conn = get_redis_conn()

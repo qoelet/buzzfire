@@ -13,7 +13,10 @@ bookmark and rank your favorite tweets today!
 <div id="searchbutton_box" style="float:left">
     <a id="searchbutton"><img src="{{ MEDIA_URL }}images/search_btn.gif"></a>
 </div>
-<div id="top_tweets_box" class="clear">
+<div id="search_errormsg" class="clear red" style="display:none;">
+    Sorry, you need to sign in before you can search and use BuzzFire.
+</div>
+<div id="top_tweets_box">
     <img src="{{ MEDIA_URL }}images/top_tweets.gif">
     <div id="top_tweets_results">
         {% comment %} top N results will go here {% endcomment %}
@@ -63,4 +66,15 @@ bookmark and rank your favorite tweets today!
     </div>
 </div>
 
+{% endblock %}
+
+{% block script %}
+    $('#searchbutton').click(function() {
+    {% if buzz_auth %}
+        var query_string = $('#search').val();
+        window.location = "{% url mybuzz_search %}" + "?q=" + query_string;
+    {% else %}
+        $('#search_errormsg').fadeIn('fast');
+    {% endif %}
+    });
 {% endblock %}
