@@ -212,8 +212,8 @@ bookmark and rank your favorite tweets today!
         var query_string = $('#search').val();
         var query_url = "{% url mybuzz_search %}" + "?q=" + query_string;
         
-        $('#top_tweets_box').fadeOut('fast').empty();
-        $('#top_tweets_box').append('<div id="loader"><img src="{{ MEDIA_URL }}images/loader.gif"></div>').fadeIn('fast');
+        $('#top_tweets_results').fadeOut('fast').empty();
+        $('#top_tweets_results').append('<div id="loader"><img src="{{ MEDIA_URL }}images/loader.gif"></div>').fadeIn('fast');
         
         function search_twitter(query_url) {
             $.getJSON(query_url, function(data) {
