@@ -27,6 +27,7 @@ def add(request):
                 longitude = request.POST['longitude']
             else:
                 longitude =None
+            
             bookmark = Bookmark(owner_id, tweet_id, tweet_txt, tweeter_screenname, location=(latitude, longitude))
             id = bookmark_dao.save(bookmark)
             
