@@ -15,6 +15,7 @@ class CommentDao:
         if self.__validate(comment):
             if not comment.id:
                 comment.id = self._connection.get("comment:next_id")
+                self._connection.incr("comment:next_id")
             self._connection.set("comment:%s:owner_id" %(comment.id), comment.owner_id)    
             self._connection.set("comment:%s:bookmark_id" %(comment.id), comment.bookmark_id)
             self._connection.set("comment:%s:text" %(comment.id), comment.text)
@@ -23,7 +24,7 @@ class CommentDao:
             self._connection.sadd("comment:members", comment.id)
             self._connection.rpush("user:%s:comments" %(comment.owner_id), comment.id)
             self._connection.rpush("bookmark:%s:comments" %(comment.bookmark_id), comment.id)
-            self._connection.incr("comment:next_id")
+            
             return comment.id
         else:
             return None
