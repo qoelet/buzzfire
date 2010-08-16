@@ -204,7 +204,8 @@ bookmark and rank your favorite tweets today!
 		});
 	}
 	{% else %}
-		$('#top_tweets_results').append('<p class="red">You're currently not signed in. <a href="/login/">Sign in now</a> to view the latest bookmarks, top tweets and use BuzzFire!</p>');
+		var simple_msg = "<p class='red'>You\'re currently not signed in. <a href='/login/'>Sign in now</a> to view the latest bookmarks, top tweets and use BuzzFire!</p>";
+		$('#top_tweets_results').append(simple_msg);
 	{% endif %}
 	
 	// search 
