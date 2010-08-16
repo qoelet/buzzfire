@@ -51,6 +51,8 @@ bookmark and rank your favorite tweets today!
 	var gettoptweets_url = '{% url top_tweets %}';
 	gettoptweets_url += '?offset=0&length=10';
 	
+	
+	// if clicked
 	$('#get_top_tweets').click(function() {
 		toptweets();
 	});
@@ -189,4 +191,9 @@ bookmark and rank your favorite tweets today!
         $('#search_errormsg').fadeIn('fast');
     {% endif %}
     });
+
+	// auto call top tweets
+	toptweets();
+	
+	
 {% endblock %}
