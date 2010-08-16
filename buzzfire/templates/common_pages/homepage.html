@@ -40,7 +40,6 @@ bookmark and rank your favorite tweets today!
 	
 	function getlatestbookmarks() {
 		$.getJSON(getbookmarks_url, function(data) {
-			$('#top_tweets_results').fadeOut('fast').empty();
 			for(tweet in data) {
 				var form1_id = 'bookmark_form_' + tweet;
 				var form2_id = 'like_form_' + tweet;
@@ -114,7 +113,7 @@ bookmark and rank your favorite tweets today!
 	$('#get_latest_bookmarks').click(function() {
         $('#get_top_tweets img').attr('src','{{ MEDIA_URL }}images/top_tweets_off.png');
 		$('#get_latest_bookmarks img').attr('src','{{ MEDIA_URL }}images/latest_bookmarks.gif');
-
+		$('#top_tweets_results').fadeOut('fast').empty();
 		getlatestbookmarks();
 	});
 	
@@ -127,13 +126,12 @@ bookmark and rank your favorite tweets today!
 	$('#get_top_tweets').click(function() {
 		$('#get_latest_bookmarks img').attr('src','{{ MEDIA_URL }}images/latest_bookmarks_off.gif');
         $('#get_top_tweets img').attr('src','{{ MEDIA_URL }}images/top_tweets.gif');
-
+		$('#top_tweets_results').fadeOut('fast').empty();
 		toptweets();
 	});
 	
 	function toptweets() {
 		$.getJSON(gettoptweets_url, function(data) {
-			$('#top_tweets_results').fadeOut('fast').empty();
 			for(tweet in data) {
 				var form1_id = 'bookmark_form_' + tweet;
 				var form2_id = 'like_form_' + tweet;
