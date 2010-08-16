@@ -204,7 +204,7 @@ bookmark and rank your favorite tweets today!
 		});
 	}
 	{% else %}
-		$('#tweet_result').append('<div class="red">You're currently not signed in. <a href="/login/">Sign in now to view the latest bookmarks, top tweets and use BuzzFire!</a></div>').fadeIn('slow');
+		$('#top_tweets_results').append('<p class="red">You're currently not signed in. <a href="/login/">Sign in now</a> to view the latest bookmarks, top tweets and use BuzzFire!</p>');
 	{% endif %}
 	
 	// search 
@@ -270,7 +270,9 @@ bookmark and rank your favorite tweets today!
     });
 
 	// auto call top tweets
+	{% if buzz_auth %}
 	toptweets();
+	{% endif %}
 	
 	
 {% endblock %}
