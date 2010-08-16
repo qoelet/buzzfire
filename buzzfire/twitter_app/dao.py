@@ -37,8 +37,6 @@ class UserDao:
     def delete(self, user_id):
         pipeline = self._connection.pipeline()
         
-        
-    
         pipeline.srem("user:members", user_id)
         user_keys = self._connection.keys("user:%s:*" %(user_id))
         if(len(user_keys)!=0):
@@ -46,9 +44,6 @@ class UserDao:
                 pipeline.delete(key)
         pipeline.execute()
         return True
-        
-        
-
         
         
             
