@@ -16,6 +16,7 @@ class UserDao:
         if self.validate(user):
             if not user.id:
                 user.id = self._connection.get("user:next_id")
+                self._connection.incr("user:next_id")
             self._connection.set("user:%s:id" %(user.screenname), user.id) 
             self._connection.set("user:%s:screenname" %(user.id), user.screenname)
             self._connection.set("user:%s:twitter_id" %(user.id), user.twitter_id)
@@ -24,7 +25,7 @@ class UserDao:
             self._connection.set("user:%s:longitude" %(user.id), user.location[1])
             self._connection.set("user:%s:latitude" %(user.id), user.location[0])
             self._connection.sadd("user:members", user.id)
-            self._connection.incr("user:next_id")
+            
             return user.id
         else:
             return None
