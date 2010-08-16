@@ -88,7 +88,7 @@ bookmark and rank your favorite tweets today!
                 function add_handler(bookmark_id, form_id) {
                     // add post handler
                     $('#' + bookmark_id).click(function(){
-                        $.post('{% url mybuzz_add_bookmark %}', $("#" + form1_id).serialize(), function(data) {
+                        $.post('{% url mybuzz_add_bookmark %}', $("#" + form_id).serialize(), function(data) {
                             alert(data);
                         });
                     });
@@ -101,12 +101,12 @@ bookmark and rank your favorite tweets today!
                     });
                 }
 
-				function like_handler(bookmark_id) {
+				function like_handler(bookmark_id, form_id) {
                     // add post handler
                     $('#like_' + bookmark_id).click(function(){
                         var post_url = '/bookmark/like/';
                         post_url += data[tweet].bookmark.id;
-                        $.post(post_url, $("#" + form2_id).serialize(), function(data) {
+                        $.post(post_url, $("#" + form_id).serialize(), function(data) {
                             alert('like saved');
                             // remove like link
                         });
@@ -120,7 +120,7 @@ bookmark and rank your favorite tweets today!
                     });
                 }
                 
-                like_handler(bookmark_id);
+                like_handler(bookmark_id, form2_id);
 
                 add_handler(bookmark_id, form1_id);
 
