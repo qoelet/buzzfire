@@ -114,7 +114,7 @@ My Buzz!
                                // add post handler
                                $('#' + bookmark_id).click(function(){
                                    $.post('{% url mybuzz_add_bookmark %}', $("#" + form_id).serialize(), function(data) {
-                                       alert(data);
+                                       alert('bookmark saved!');
                                    });
                                });
 

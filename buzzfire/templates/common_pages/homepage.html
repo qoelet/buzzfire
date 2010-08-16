@@ -71,7 +71,7 @@ bookmark and rank your favorite tweets today!
                     // add post handler
                     $('#' + bookmark_id).click(function(){
                         $.post('{% url mybuzz_add_bookmark %}', $("#" + form_id).serialize(), function(data) {
-                            alert(data);
+                            alert('bookmark saved!');
                         });
                     });
 
@@ -163,7 +163,7 @@ bookmark and rank your favorite tweets today!
                     // add post handler
                     $('#' + bookmark_id).click(function(){
                         $.post('{% url mybuzz_add_bookmark %}', $("#" + form_id).serialize(), function(data) {
-                            alert(data);
+                            alert('bookmark saved!');
                         });
                     });
 
@@ -244,7 +244,7 @@ bookmark and rank your favorite tweets today!
                         // add post handler
                         $('#' + bookmark_id).click(function(){
                             $.post('{% url mybuzz_add_bookmark %}', $("#" + form_id).serialize(), function(data) {
-                                alert(data);
+                                alert('bookmark saved!');
                             });
                         });
 
