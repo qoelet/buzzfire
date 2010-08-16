@@ -13,7 +13,7 @@ bookmark and rank your favorite tweets today!
 <div id="searchbutton_box" style="float:left">
     <a id="searchbutton"><img src="{{ MEDIA_URL }}images/search_btn.gif"></a>
 </div>
-<div id="search_errormsg" class="clear red" style="display:none;">
+<div id="search_errormsg" class="clear red" style="display:none;margin-top:10px;">
     Sorry, you need to sign in before you can search and use BuzzFire.
 </div>
 <div id="tweets_nav" class="clear">
@@ -33,6 +33,7 @@ bookmark and rank your favorite tweets today!
 {% endblock %}
 
 {% block script %}
+	{% if buzz_auth %}
 	// latest bookmarks
 	var getbookmarks_url = '{% url latest_bookmarks %}';
 	getbookmarks_url += '?offset=0&length=10';
@@ -202,7 +203,9 @@ bookmark and rank your favorite tweets today!
 			}
 		});
 	}
-	
+	{% else %}
+		$('#top_tweets_results').append('<div class="red">You're currently not signed in. <a href="/login/">Sign in now to view the latest bookmarks, top tweets and use BuzzFire!</a></div>').fadeIn('slow');
+	{% endif %}
 	
 	// search 
     $('#searchbutton').click(function() {

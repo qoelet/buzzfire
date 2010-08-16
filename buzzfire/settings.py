@@ -47,7 +47,7 @@ if DEPLOY == 'LOCAL':
 	)
 else:
 	MEDIA_ROOT = ''
-	MEDIA_URL = ''
+	MEDIA_URL = 'http://media.buzzfire.com/'
 	TEMPLATE_DIRS = (
 	   os.path.abspath('') + '/templates/',
 	)
