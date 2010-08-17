@@ -3,7 +3,7 @@ import sys, os
 
 DEPLOY = 'LOCAL' # 'LOCAL' or 'PRODUCTION'
 
-DEBUG = True
+DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 
 
@@ -96,5 +96,6 @@ CACHE_BACKEND = 'buzzfire.redis_cache.cache://localhost:6379'
 BUZZFIRE_LOGIN_URL = '/login/'
 BUZZFIRE_HOME_PAGE = '/'
 BUZZFIRE_USER_PAGE = '/mybuzz/'
+BUZZFIRE_ERROR = '/error/'
 BUZZ_REDIS_HOST = 'localhost'
 BUZZ_REDIS_PORT  = 6379

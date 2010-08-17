@@ -40,6 +40,9 @@ urlpatterns = patterns('',
     # FAQ
     url(r'^faq/$', 'buzzfire.common_pages.faq'),
 
+    # Error
+    url(r'^error/$', 'buzzfire.common_pages.error'),
+
     # homepage
     url(r'^$', 'buzzfire.common_pages.homepage'),
 )

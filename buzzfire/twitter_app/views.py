@@ -33,8 +33,10 @@ def login(request):
 	try:
 		if resp['status'] != '200':
 			error_message = "Invalid response received: %s" % resp['status']
+			return HttpResponseRedirect(settings.BUZZFIRE_ERROR)
 	except KeyError:
 		error_message = "No data received."
+		return HttpResponseRedirect(settings.BUZZFIRE_ERROR)
 		
 	# store to session store
 	request.session['request_token'] = dict(urlparse.parse_qsl(content))
@@ -61,7 +63,8 @@ def auth_user(request):
 
 	if resp['status'] != '200':
 		
-		raise Exception("Invalid response from Twitter.")
+		#raise Exception("Invalid response from Twitter.")
+		return HttpResponseRedirect(settings.BUZZFIRE_ERROR)
 		
 	access_token = dict(urlparse.parse_qsl(content))
 	
@@ -121,8 +124,9 @@ def get_timeline(request):
 		try:
 				if resp['status'] != '200':
 						error_message = "Invalid response received: %s" % resp['status']
+						return HttpResponseRedirect(settings.BUZZFIRE_ERROR)
 		except KeyError:
-				raise Exception('Did not get a proper response')
+				return HttpResponseRedirect(settings.BUZZFIRE_ERROR)
 				
 		return HttpResponse(content, content_type = "application/json")
 	else:
@@ -150,8 +154,9 @@ def search(request):
 		try:
 				if resp['status'] != '200':
 						error_message = "Invalid response received: %s" % resp['status']
+						return HttpResponseRedirect(settings.BUZZFIRE_ERROR)
 		except KeyError:
-				raise Exception('Did not get a proper response')
+				return HttpResponseRedirect(settings.BUZZFIRE_ERROR)
 		return HttpResponse(content, content_type = "application/json")
 	else:
 		return HttpResponseRedirect(settings.BUZZFIRE_LOGIN_URL)
