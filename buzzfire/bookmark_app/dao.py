@@ -50,6 +50,8 @@ class BookmarkDao:
                     pipeline.zincrby("bookmark:byscore:bookmarks", bookmark.id, 0.0)
                     pipeline.zincrby("user:%s:byscore:bookmarks" %(bookmark.owner_id), bookmark.id, 0.0)
                     pipeline.execute()
+                    
+                    
                     return bookmark.id
                 finally:
                     bookmark_lock.release()
@@ -93,6 +95,8 @@ class BookmarkDao:
                 for key in bookmark_keys:
                     pipeline.delete(key)
             pipeline.execute()
+            
+            
             return True
         finally:
             bookmark_lock.release()
@@ -255,6 +259,7 @@ class BookmarkDao:
                 #add one more bookmark to the bookmark that user like
                 pipeline.sadd("user:%s:likes" %(user_id), bookmark_id)
                 pipeline.execute()
+            
             finally:
                 owner_lock.release()
                 bookmark_lock.release()
