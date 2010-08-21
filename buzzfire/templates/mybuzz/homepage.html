@@ -47,9 +47,9 @@ My Buzz!
     function makelinks(tweet) {
 	var shortlinks_re = /https?:\/\/([-\w\.]+)+(:\d+)?(\/([\w/_\.]*(\?\S+)?)?)?/;
         if (tweet.match(shortlinks_re)) {
-	    var tweetlink = data[tweet].text.match(shortlinks_re);
+	    var tweetlink = tweet.match(shortlinks_re);
 	    var linkcode = '<a href="' + tweetlink[0] + '" target="_blank">' + tweetlink[0] + '</a>';
-	    var linked_tweet  = data[tweet].text.replace(shortlinks_re, linkcode);
+	    var linked_tweet  = tweet.replace(shortlinks_re, linkcode);
 	    return linked_tweet
 	}
 	else {
