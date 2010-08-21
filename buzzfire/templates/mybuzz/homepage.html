@@ -44,9 +44,9 @@ My Buzz!
 {% block script %}
     {% if buzz_auth %}
     // convert links
-    var re_string = "/https?:\/\/([-\w\.]+)+(:\d+)?(\/([\w/_\.]*(\?\S+)?)?)?/";
+    var shortlinks_re= /https?:\/\/([-\w\.]+)+(:\d+)?(\/([\w/_\.]*(\?\S+)?)?)?/;
     
-    var shortlinks_re = new RegExp(re_string, "g");
+    //var shortlinks_re = new RegExp(re_string, "g");
 
 
     // tweet!
