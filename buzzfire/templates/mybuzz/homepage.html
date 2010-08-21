@@ -43,11 +43,19 @@ My Buzz!
 
 {% block script %}
     {% if buzz_auth %}
-    // convert links
-    var shortlinks_re= /https?:\/\/([-\w\.]+)+(:\d+)?(\/([\w/_\.]*(\?\S+)?)?)?/;
-    
-    //var shortlinks_re = new RegExp(re_string, "g");
-
+    // id and make links
+    function makelinks(tweet) {
+	var shortlinks_re = /https?:\/\/([-\w\.]+)+(:\d+)?(\/([\w/_\.]*(\?\S+)?)?)?/;
+        if (tweet.match(shortlinks_re)) {
+	    var tweetlink = data[tweet].text.match(shortlinks_re);
+	    var linkcode = '<a href="' + tweetlink[0] + '" target="_blank">' + tweetlink[0] + '</a>';
+	    var linked_tweet  = data[tweet].text.replace(shortlinks_re, linkcode);
+	    return linked_tweet
+	}
+	else {
+	    return tweet;
+	}
+    }
 
     // tweet!
     $('#write_tweet').click(function() {
@@ -180,14 +188,7 @@ My Buzz!
                 var bookmark_id = 'bookmark_' + tweet;
                 var that = this;
 
-            	if (data[tweet].text.match(shortlinks_re)) {
-		    var tweetlink = data[tweet].text.match(shortlinks_re);
-		    var linkcode = '<a href="' + tweetlink[0] + '" target="_blank">' + tweetlink[0] + '</a>';
-		    var linked_tweet  = data[tweet].text.replace(shortlinks_re, linkcode);
-		}
-		else {
-		    var linked_tweet = data[tweet].text;
-		}
+           	var linked_tweet = makelinks(data[tweet].text);
                 // append tweet
 		            
                 $('#mybuzz_timeline').append('<div class="tweet_result"><div class="tweet">' + linked_tweet +
