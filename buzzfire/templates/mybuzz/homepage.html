@@ -177,7 +177,7 @@ My Buzz!
                 var bookmark_id = 'bookmark_' + tweet;
                 var that = this;
 
-            	if (data[tweet].text.match(shortlinks_re) {
+            	if (data[tweet].text.match(shortlinks_re)) {
 		    var tweetlink = data[tweet].text.match(shortlinks_re);
 		    var linkcode = '<a href="' + tweetlink[0] + '" target="_blank">' + tweetlink[0] + '</a>';
 		    data[tweet].text = data[tweet].text.replace(shortlinks_re, linkcode);
