@@ -44,7 +44,9 @@ My Buzz!
 {% block script %}
     {% if buzz_auth %}
     // convert links
-    var shortlinks_re = "http:\/\/[a-z]+\.[a-z]+\/[a-z,A-Z,0-9]+";
+    var re_string = "http:\/\/[a-z]+\.[a-z]+\/[a-z,A-Z,0-9]+";
+    var shortlinks_re = new RegExp(re_string, "g");
+
 
     // tweet!
     $('#write_tweet').click(function() {
