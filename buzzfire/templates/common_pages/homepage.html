@@ -34,6 +34,20 @@ bookmark and rank your favorite tweets today!
 
 {% block script %}
 	{% if buzz_auth %}
+	// id and make links
+    	function makelinks(tweet) {
+        	var shortlinks_re = /https?:\/\/([-\w\.]+)+(:\d+)?(\/([\w/_\.]*(\?\S+)?)?)?/;
+        	if (tweet.match(shortlinks_re)) {
+            	    var tweetlink = tweet.match(shortlinks_re);
+                    var linkcode = '<a href="' + tweetlink[0] + '" target="_blank">' + tweetlink[0] + '</a>';
+            	    var linked_tweet  = tweet.replace(shortlinks_re, linkcode);
+            	    return linked_tweet
+        	}
+        	else {
+            	    return tweet;
+        	}
+    	}
+
 	// latest bookmarks
 	var getbookmarks_url = '{% url latest_bookmarks %}';
 	getbookmarks_url += '?offset=0&length=10';
@@ -46,8 +60,10 @@ bookmark and rank your favorite tweets today!
                 var bookmark_id = 'bookmark_' + tweet;
                 var that = this;
 
+		var linked_tweet = makelinks(data[tweet].bookmark.tweet_txt);
+
 				// append tweet
-				$('#top_tweets_results').append('<div class="tweet_result"><div class="tweet">' + data[tweet].bookmark.tweet_txt +
+				$('#top_tweets_results').append('<div class="tweet_result"><div class="tweet">' + linked_tweet +
                 '</div>' +
                 '<div class="tweet_info">' + 
                 '<div class="fleft"><img src="{{ MEDIA_URL }}images/user_ico.gif"></div>' +
@@ -137,9 +153,11 @@ bookmark and rank your favorite tweets today!
 				var form2_id = 'like_form_' + tweet;
                 var bookmark_id = 'bookmark_' + tweet;
                 var that = this;
+
+		var linked_tweet = makelinks(data[tweet].bookmark.tweet_txt);
 				
 				// append tweet
-				$('#top_tweets_results').append('<div class="tweet_result"><div class="tweet">' + data[tweet].bookmark.tweet_txt +
+				$('#top_tweets_results').append('<div class="tweet_result"><div class="tweet">' + linked_tweet +
                 '</div>' +
                 '<div class="tweet_info">' + 
                 '<div class="fleft"><img src="{{ MEDIA_URL }}images/user_ico.gif"></div>' +
@@ -223,9 +241,11 @@ bookmark and rank your favorite tweets today!
                     var bookmark_id = 'bookmark_' + tweet;
                     var that = this;
 
+		    var linked_tweet = makelinks(data['results'][tweet].text);
+
                     // append tweet
 
-                    $('#top_tweets_box').append('<div class="tweet_result"><div class="tweet">' + data['results'][tweet].text +
+                    $('#top_tweets_box').append('<div class="tweet_result"><div class="tweet">' + linked_tweet +
                     '</div>' +
                     '<div class="tweet_info">' + 
                     '<div class="fleft"><img src="{{ MEDIA_URL }}images/user_ico.gif"></div>' +
