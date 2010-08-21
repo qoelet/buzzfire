@@ -301,11 +301,17 @@ My Buzz!
 				
 		delete_handler(bookmark_id);
 
+
 		function retweet_handler(bookmark_id, tweet) {
 		    $('#rt_' + bookmark_id).click(function() {
+                        function hideRT() {
+                            $('#tbox_' + bookmark_id).fadeOut();
+                        }
 		        twttr.anywhere(function (T) {
 			    T("#tbox_"+ bookmark_id).tweetBox({
-                                defaultContent: tweet
+                                defaultContent: tweet,
+                                onTweet: hideRT,
+                                label: "Retweet bookmark!"
                             });
                          });
 		    });
