@@ -43,6 +43,8 @@ My Buzz!
 
 {% block script %}
     {% if buzz_auth %}
+    // convert links
+    var shortlinks_re = "http:\/\/[a-z]+\.[a-z]+\/[a-z,A-Z,0-9]+";
 
     // tweet!
     $('#write_tweet').click(function() {
@@ -174,9 +176,14 @@ My Buzz!
                 var form_id = 'bookmark_form_' + tweet;
                 var bookmark_id = 'bookmark_' + tweet;
                 var that = this;
-            
+
+            	if (data[tweet].text.match(shortlinks_re) {
+		    var tweetlink = data[tweet].text.match(shortlinks_re);
+		    var linkcode = '<a href="' + tweetlink[0] + '" target="_blank">' + tweetlink[0] + '</a>';
+		    data[tweet].text = data[tweet].text.replace(shortlinks_re, linkcode);
+		}
                 // append tweet
-            
+		            
                 $('#mybuzz_timeline').append('<div class="tweet_result"><div class="tweet">' + data[tweet].text +
                 '</div>' +
                 '<div class="tweet_info">' + 
