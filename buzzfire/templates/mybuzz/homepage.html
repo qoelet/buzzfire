@@ -44,7 +44,8 @@ My Buzz!
 {% block script %}
     {% if buzz_auth %}
     // convert links
-    var re_string = "http:\/\/[a-z]+\.[a-z]+\/[a-z,A-Z,0-9]+";
+    //var re_string =  /https?:\/\/([-\w\.]+)+(:\d+)?(\/([\w/_\.]*(\?\S+)?)?)?/;
+    
     var shortlinks_re = new RegExp(re_string, "g");
 
 
