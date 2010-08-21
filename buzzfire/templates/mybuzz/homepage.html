@@ -250,7 +250,8 @@ My Buzz!
                 '<div class="fleft"><img src="{{ MEDIA_URL }}images/user_ico.gif"></div>' +
                 '<div class="fleft padbottom">' + data[tweet].bookmark.tweeter_screenname + '</div>' +
 				'<div class="fleft padright"><a id="del_' + bookmark_id  + '"><img src=\"{{ MEDIA_URL }}images/delete_ico.png\"></a></div>' + 
-                '<div class="fleft padbottom red">delete me? :(</div>' + 
+                '<div class="fleft padbottom red">delete me? :(</div>' +
+		'<div class="fleft padright"><a id="rt_' + bookmark_id + '">retweet me?</a>' + 
 				'<form id="' + form_id + '"' + ' method="post">' +
                 '<input type="hidden" name="bookmark_id" value="' + data[tweet].bookmark.id + '">' +
                 '</form>' +
@@ -298,7 +299,18 @@ My Buzz!
                     });
                 }
 				
-				delete_handler(bookmark_id);
+		delete_handler(bookmark_id);
+
+		function retweet_handler(bookmark_id, tweet) {
+		    $('#rt_' + bookmark_id).click(function() {
+		        twttr.anywhere(function (T) {
+			    T("#tbox").tweetBox({
+                                defaultContent: tweet
+                            });
+                         });
+		    }
+		}
+                retweet_handler(bookmark_id, data[tweet].bookmark.tweet_txt);
             }
 
 	twttr.anywhere(function(twitter) {
