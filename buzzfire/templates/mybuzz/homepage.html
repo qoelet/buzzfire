@@ -26,6 +26,9 @@ My Buzz!
     <h2 class="fleft">
         <a id="new_search" class="tooltip" title="Search Twitter!"><img src="{{ MEDIA_URL }}images/my_search_off.gif"></a>
     </h2>
+    <h2 class="fleft">
+	<a id="write_tweet" class="tooltip" title="Write a tweet!">Tweet!</a>
+    </h2>
     <div class="clear"></div>
     <div id="mybuzz_timeline">
         <div id="loader">
@@ -40,6 +43,22 @@ My Buzz!
 
 {% block script %}
     {% if buzz_auth %}
+
+    // tweet!
+    $('#write_tweet').click(function() {
+	$('#mybuzz_timeline').fadeOut('fast').empty();
+
+    	// dim other links
+        $('#view_latest_tweets img').attr('src','{{ MEDIA_URL }}images/latest_tweets_off.gif');
+        $('#view_bookmarks img').attr('src','{{ MEDIA_URL }}images/my_bookmarks_off.gif');
+        $('#new_search img').attr('src','{{ MEDIA_URL }}images/my_search_off.gif');
+
+	// add tweet box
+	$('#mybuzz_timeline').append('<div id="tbox"></div>').fadeIn('slow');
+  	twttr.anywhere(function (T) {
+    	    T("#tbox").tweetBox();
+  	});
+    });
     
     // refresh data
     $('#view_latest_tweets').click(function() {
