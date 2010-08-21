@@ -251,11 +251,11 @@ My Buzz!
                 '<div class="fleft padbottom">' + data[tweet].bookmark.tweeter_screenname + '</div>' +
 				'<div class="fleft padright"><a id="del_' + bookmark_id  + '"><img src=\"{{ MEDIA_URL }}images/delete_ico.png\"></a></div>' + 
                 '<div class="fleft padbottom red">delete me? :(</div>' +
-		'<div class="fleft padright"><a id="rt_' + bookmark_id + '">retweet me?</a>' + 
+		'<div class="fleft padright"><a id="rt_' + bookmark_id + '">retweet me?</a></div>' + 
 				'<form id="' + form_id + '"' + ' method="post">' +
                 '<input type="hidden" name="bookmark_id" value="' + data[tweet].bookmark.id + '">' +
                 '</form>' +
-                '<div class="clear"></div>'  + 
+                '<div class="clear"></div><div id="tbox_' + bookmark_id + '"></div>'  + 
                 '</div></div>').fadeIn('slow');
                 /*
                 function like_handler(bookmark_id) {
@@ -304,7 +304,7 @@ My Buzz!
 		function retweet_handler(bookmark_id, tweet) {
 		    $('#rt_' + bookmark_id).click(function() {
 		        twttr.anywhere(function (T) {
-			    T("#tbox").tweetBox({
+			    T("#tbox_"+ bookmark_id).tweetBox({
                                 defaultContent: tweet
                             });
                          });
