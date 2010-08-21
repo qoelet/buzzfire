@@ -1,6 +1,8 @@
 import datetime
 from models import Bookmark
 
+file = open("/home/soulofpeace/log.txt", "a")
+
 class BookmarkDao:
     def __init__(self, connection):
         self._connection = connection
@@ -25,37 +27,27 @@ class BookmarkDao:
                 self._connection.incr("bookmark:next_id")
 
             if(not self._connection.sismember("user:%s:bookmark_set_tweet_ids" %(bookmark.owner_id), bookmark.tweet_id)):
-                lock = self._connection.lock("lock")
-                user_lock = self._connection.lock("user:%s" %(bookmark.owner_id))
-                bookmark_lock = self._connection.lock("bookmark:%s" %(bookmark.id))
-                lock.acquire()
-                user_lock.acquire()
-                bookmark_lock.acquire()
-                lock.release()
-                try:
-                    pipeline.set("bookmark:%s:owner_id" %(bookmark.id), bookmark.owner_id)
-                    pipeline.set("bookmark:%s:tweet_id" %(bookmark.id), bookmark.tweet_id)
-                    pipeline.set("bookmark:%s:tweet_txt" %(bookmark.id), bookmark.tweet_txt)
-                    pipeline.set("bookmark:%s:tweeter_screenname" %(bookmark.id), bookmark.tweeter_screenname)
-                    pipeline.set("bookmark:%s:latitude" %(bookmark.id),  bookmark.location[0])
-                    pipeline.set("bookmark:%s:longitude" %(bookmark.id), bookmark.location[1])
-                           
-                    pipeline.set("bookmark:%s:created" %(bookmark.id), bookmark.created.strftime("%Y-%m-%d %H:%M:%S"))
-                    pipeline.set("bookmark:%s:updated" %(bookmark.id), bookmark.updated.strftime("%Y-%m-%d %H:%M:%S"))
-                    pipeline.lpush("bookmark:bytime:bookmarks", bookmark.id)
-                    pipeline.incr("user:%s:%s:total_bookmarks" %(bookmark.owner_id, bookmark.created.strftime("%Y-%m")))
-                    pipeline.lpush("user:%s:bookmarks" %(bookmark.owner_id), bookmark.id)
-                    pipeline.sadd("user:%s:bookmarks_set" %(bookmark.owner_id), bookmark.id)
-                    pipeline.sadd("user:%s:bookmark_set_tweet_ids" %(bookmark.owner_id), bookmark.tweet_id)
-                    pipeline.zincrby("bookmark:byscore:bookmarks", bookmark.id, 0.0)
-                    pipeline.zincrby("user:%s:byscore:bookmarks" %(bookmark.owner_id), bookmark.id, 0.0)
-                    pipeline.execute()
+                pipeline.set("bookmark:%s:owner_id" %(bookmark.id), bookmark.owner_id)
+                pipeline.set("bookmark:%s:tweet_id" %(bookmark.id), bookmark.tweet_id)
+                pipeline.set("bookmark:%s:tweet_txt" %(bookmark.id), bookmark.tweet_txt)
+                pipeline.set("bookmark:%s:tweeter_screenname" %(bookmark.id), bookmark.tweeter_screenname)
+                pipeline.set("bookmark:%s:latitude" %(bookmark.id),  bookmark.location[0])
+                pipeline.set("bookmark:%s:longitude" %(bookmark.id), bookmark.location[1])
+                    
+                pipeline.set("bookmark:%s:created" %(bookmark.id), bookmark.created.strftime("%Y-%m-%d %H:%M:%S"))
+                pipeline.set("bookmark:%s:updated" %(bookmark.id), bookmark.updated.strftime("%Y-%m-%d %H:%M:%S"))
+                pipeline.lpush("bookmark:bytime:bookmarks", bookmark.id)
+                pipeline.incr("user:%s:%s:total_bookmarks" %(bookmark.owner_id, bookmark.created.strftime("%Y-%m")))
+                pipeline.lpush("user:%s:bookmarks" %(bookmark.owner_id), bookmark.id)
+                pipeline.sadd("user:%s:bookmarks_set" %(bookmark.owner_id), bookmark.id)
+                pipeline.sadd("user:%s:bookmark_set_tweet_ids" %(bookmark.owner_id), bookmark.tweet_id)
+                pipeline.zincrby("bookmark:byscore:bookmarks", bookmark.id, 0.0)
+                pipeline.zincrby("user:%s:byscore:bookmarks" %(bookmark.owner_id), bookmark.id, 0.0)
+                pipeline.execute()
                     
                     
-                    return bookmark.id
-                finally:
-                    bookmark_lock.release()
-                    user_lock.release()
+                return bookmark.id
+
 
             else:
                 return None
@@ -66,41 +58,30 @@ class BookmarkDao:
         
         pipeline = self._connection.pipeline()
         owner_id = self._connection.get("bookmark:%s:owner_id" %bookmark_id)
-        
-        lock = self._connection.lock("lock")
-        bookmark_lock = self._connection.lock("bookmark:%s" %(bookmark_id))
-        user_lock = self._connection.lock("user:%s" %(owner_id))
-        
-        lock.acquire()
-        bookmark_lock.acquire()
-        user_lock.acquire()
-        lock.release()
-        
-        try:
-            pipeline.lrem("user:%s:bookmarks" %(owner_id), bookmark_id)
-            pipeline.zrem("user:%s:byscore:bookmarks" %(owner_id), bookmark_id)
-            #if(pipeline.sismember("user:%s:likedbookmarks" %(owner_id), bookmark_id)):
-             #    self.update_user_liked_bookmark(owner_id, -1)
-            pipeline.zrem("bookmark:byscore:bookmarks", bookmark_id)
-            pipeline.lrem("bookmark:bytime:bookmarks", bookmark_id)
-            pipeline.lrem("user:%s:bookmarks" %(owner_id), bookmark_id)
-            pipeline.srem("user:%s:bookmarks_set" %(owner_id), bookmark_id)
-            pipeline.srem("user:%s:bookmark_set_tweet_ids" %(owner_id), pipeline.get("bookmark:%s:tweet_id" %(bookmark_id)))
-            if(self._connection.exists("bookmark:%s:tags" %(bookmark_id))):
-                tag_ids = self._connection.smembers("bookmark:%s:tags" %(bookmark_id))
-                for id in tag_ids:
-                    pipeline.srem("tag:%s:bookmarks" %(id), bookmark_id)
-            bookmark_keys = self._connection.keys("bookmark:%s:*" %(bookmark_id))
-            if(len(bookmark_keys)):
-                for key in bookmark_keys:
-                    pipeline.delete(key)
-            pipeline.execute()
+              
+   
+        pipeline.lrem("user:%s:bookmarks" %(owner_id), bookmark_id)
+        pipeline.zrem("user:%s:byscore:bookmarks" %(owner_id), bookmark_id)
+        #if(pipeline.sismember("user:%s:likedbookmarks" %(owner_id), bookmark_id)):
+        #    self.update_user_liked_bookmark(owner_id, -1)
+        pipeline.zrem("bookmark:byscore:bookmarks", bookmark_id)
+        pipeline.lrem("bookmark:bytime:bookmarks", bookmark_id)
+        pipeline.lrem("user:%s:bookmarks" %(owner_id), bookmark_id)
+        pipeline.srem("user:%s:bookmarks_set" %(owner_id), bookmark_id)
+        pipeline.srem("user:%s:bookmark_set_tweet_ids" %(owner_id), pipeline.get("bookmark:%s:tweet_id" %(bookmark_id)))
+        if(self._connection.exists("bookmark:%s:tags" %(bookmark_id))):
+            tag_ids = self._connection.smembers("bookmark:%s:tags" %(bookmark_id))
+            for id in tag_ids:
+                pipeline.srem("tag:%s:bookmarks" %(id), bookmark_id)
+        bookmark_keys = self._connection.keys("bookmark:%s:*" %(bookmark_id))
+        if(len(bookmark_keys)):
+            for key in bookmark_keys:
+                pipeline.delete(key)
+        pipeline.execute()
             
             
-            return True
-        finally:
-            bookmark_lock.release()
-            user_lock.release()
+        return True
+   
         
 
 
@@ -140,12 +121,14 @@ class BookmarkDao:
         pipeline.get("bookmark:%s:updated" %(bookmark_id))
         if self._connection.exists("bookmark:%s:tags" %(bookmark_id)):
             tags = pipeline.smembers("bookmark:%s:tags" %(bookmark_id))
+            print pipeline.execute()
             owner_id, tweet_id, tweet_txt, tweeter_screenname, latitude, longitude, created, updated, tags = pipeline.execute()
             created =   datetime.datetime.strptime(created,"%Y-%m-%d %H:%M:%S")
             updated =   datetime.datetime.strptime(updated,"%Y-%m-%d %H:%M:%S")
             location=(latitude, longitude)
         else:
             tags = set()
+            
             owner_id, tweet_id, tweet_txt, tweeter_screenname, latitude, longitude, created, updated = pipeline.execute()
             location=(latitude, longitude)
             created =   datetime.datetime.strptime(created,"%Y-%m-%d %H:%M:%S")
@@ -187,85 +170,68 @@ class BookmarkDao:
             #get the owner who own the bookmark
             owner_id = self._connection.get("bookmark:%s:owner_id" %(bookmark_id))
             
-            owner_lock = self._connection.lock("user:%s" %(owner_id))
-            user_lock = self._connection.lock("user:%s" %(user_id))
-            bookmark_lock = self._connection.lock("bookmark:%s" %(bookmark_id))
-            lock = self._connection.lock("lock")
             
-            lock.acquire()
-            owner_lock.acquire()
-            user_lock.acquire()
-            bookmark_lock.acquire()
-            lock.release()
-            
-            try:
-         
-                # get total number of bookmark which user in this month
-                current_month = datetime.datetime.now()
-                if (self._connection.exists("user:%s:%s:total_bookmarks" %(user_id, current_month.strftime("%Y-%m")))):
-                    total_bookmark_user= int(self._connection.get("user:%s:%s:total_bookmarks" %(user_id, current_month.strftime("%Y-%m"))))
-                else:
-                    total_bookmark_user = 0.0
+            # get total number of bookmark which user in this month
+            current_month = datetime.datetime.now()
+            if (self._connection.exists("user:%s:%s:total_bookmarks" %(user_id, current_month.strftime("%Y-%m")))):
+                total_bookmark_user= int(self._connection.get("user:%s:%s:total_bookmarks" %(user_id, current_month.strftime("%Y-%m"))))
+            else:
+                total_bookmark_user = 0.0
 
-                #get total number of bookmark which other user has like from this user in this month
-                if(self._connection.exists("user:%s:%s:total_bookmarks_like_by_others" %(user_id, current_month.strftime("%Y-%m")))):
-                    total_liked_bookmark_of_user= int(self._connection.get("user:%s:%s:total_bookmarks_like_by_others" %(user_id, current_month.strftime("%Y-%m"))))
-                else:
-                    total_liked_bookmark_of_user =0
+            #get total number of bookmark which other user has like from this user in this month
+            if(self._connection.exists("user:%s:%s:total_bookmarks_like_by_others" %(user_id, current_month.strftime("%Y-%m")))):
+                total_liked_bookmark_of_user= int(self._connection.get("user:%s:%s:total_bookmarks_like_by_others" %(user_id, current_month.strftime("%Y-%m"))))
+            else:
+                total_liked_bookmark_of_user =0
                 
-                # calculate the number of user like per bookmark
-                if total_bookmark_user!=0:
-                    score_of_user =float(total_liked_bookmark_of_user)/total_bookmark_user 
+            # calculate the number of user like per bookmark
+            if total_bookmark_user!=0:
+                score_of_user =float(total_liked_bookmark_of_user)/total_bookmark_user 
                     #print score_of_user
-                else:
-                    score_of_user =0.0
+            else:
+                score_of_user =0.0
                 
-                #get the totalscore of the bookmark
-                if self._connection.exists("bookmark:%s:totalscore" %(bookmark_id)):
-                    total_score_bookmark = float(self._connection.get("bookmark:%s:totalscore" %(bookmark_id)))
-                else:
-                    total_score_bookmark = 0.0
+            #get the totalscore of the bookmark
+            if self._connection.exists("bookmark:%s:totalscore" %(bookmark_id)):
+                total_score_bookmark = float(self._connection.get("bookmark:%s:totalscore" %(bookmark_id)))
+            else:
+                total_score_bookmark = 0.0
             
-                #get the number of ppl that like the bookmark
-                if self._connection.exists("bookmark:%s:likes" %(bookmark_id)):
-                    total_num_user_like_bookmark = self._connection.scard("bookmark:%s:likes" %(bookmark_id))
-                else:
-                    total_num_user_like_bookmark = 0.0
+            #get the number of ppl that like the bookmark
+            if self._connection.exists("bookmark:%s:likes" %(bookmark_id)):
+                total_num_user_like_bookmark = self._connection.scard("bookmark:%s:likes" %(bookmark_id))
+            else:
+                total_num_user_like_bookmark = 0.0
             
-                # calculate the new total score of bookmark
-                new_total_score_bookmark = score_of_user + total_score_bookmark
-                #total number of user in the system
-                total_user = float(self._connection.scard("user:members"))
-                # calculate the new score of bookmark
-                score_bookmark= (new_total_score_bookmark/(total_num_user_like_bookmark+1))/total_user
-                #print score_bookmark
-                #update the total score of bookmark
-                pipeline.set("bookmark:%s:totalscore" %(bookmark_id), new_total_score_bookmark)
+            # calculate the new total score of bookmark
+            new_total_score_bookmark = score_of_user + total_score_bookmark
+            #total number of user in the system
+            total_user = float(self._connection.scard("user:members"))
+            # calculate the new score of bookmark
+            score_bookmark= (new_total_score_bookmark/(total_num_user_like_bookmark+1))/total_user
+            print score_bookmark
+            #update the total score of bookmark
+            pipeline.set("bookmark:%s:totalscore" %(bookmark_id), new_total_score_bookmark)
 
-                #update the user who like the bookmark
-                pipeline.sadd("bookmark:%s:likes" %(bookmark_id), user_id)
+            #update the user who like the bookmark
+            pipeline.sadd("bookmark:%s:likes" %(bookmark_id), user_id)
 
+            
+            #update the total bookmark like by the user in this month by 1
+            pipeline.incr("user:%s:%s:total_bookmarks_like_by_others" %(owner_id, current_month.strftime("%Y-%m")))
 
-                #update the total bookmark like by the user in this month by 1
-                pipeline.incr("user:%s:%s:total_bookmarks_like_by_others" %(owner_id, current_month.strftime("%Y-%m")))
-
-                #add the bookmark to the list of bookmark of the owner which other ppl like
-                pipeline.sadd("user:%s:likedbookmarks" %(owner_id), bookmark_id)
+            #add the bookmark to the list of bookmark of the owner which other ppl like
+            pipeline.sadd("user:%s:likedbookmarks" %(owner_id), bookmark_id)
                 
-                # update the score of the bookmark
+            # update the score of the bookmark
             
-                pipeline.zadd("bookmark:byscre:bookmarks", bookmark_id, score_bookmark)
-                pipeline.zadd("user:%s:byscore:bookmarks" %(owner_id), bookmark_id, score_bookmark)
-                #add one more bookmark to the bookmark that user like
-                pipeline.sadd("user:%s:likes" %(user_id), bookmark_id)
-                pipeline.execute()
+            pipeline.zadd("bookmark:byscore:bookmarks", bookmark_id, score_bookmark)
+            pipeline.zadd("user:%s:byscore:bookmarks" %(owner_id), bookmark_id, score_bookmark)
+            #add one more bookmark to the bookmark that user like
+            pipeline.sadd("user:%s:likes" %(user_id), bookmark_id)
+            pipeline.execute()
             
-            finally:
-                owner_lock.release()
-                bookmark_lock.release()
-                user_lock.release()
-
-
+            
     def get_bookmark_by_rank(self, offset='0', length='-1'):
         if int(length)<0:
             length = self._connection.zcard("bookmark:byscore:bookmarks")
