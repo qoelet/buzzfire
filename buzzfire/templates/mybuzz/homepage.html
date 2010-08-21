@@ -134,9 +134,11 @@ My Buzz!
                            var bookmark_id = 'bookmark_' + tweet;
                            var that = this;
 
+			   var linked_tweet = makelinks(data['results'][tweet].text);
+
                            // append tweet
 
-                           $('#mybuzz_timeline').append('<div class="tweet_result"><div class="tweet">' + data['results'][tweet].text +
+                           $('#mybuzz_timeline').append('<div class="tweet_result"><div class="tweet">' + linked_tweet +
                            '</div>' +
                            '<div class="tweet_info">' + 
                            '<div class="fleft"><img src="{{ MEDIA_URL }}images/user_ico.gif"></div>' +
@@ -240,8 +242,9 @@ My Buzz!
                 
                 var form_id = 'del_form_' + tweet;
                 var bookmark_id = 'bookmark_' + data[tweet].bookmark.id;
-
-                var bookmark = $('#mybuzz_timeline').append('<div class="tweet_result"><div class="tweet">' + data[tweet].bookmark.tweet_txt +
+		
+		var linked_tweet = makelinks(data[tweet].bookmark.tweet_txt);
+                var bookmark = $('#mybuzz_timeline').append('<div class="tweet_result"><div class="tweet">' + linked_tweet  +
                 '</div>' +
                 '<div class="tweet_info">' + 
                 '<div class="fleft"><img src="{{ MEDIA_URL }}images/user_ico.gif"></div>' +
