@@ -1,5 +1,5 @@
 # Django settings for buzzfire project.
-import sys, os, logging
+import sys, os, logging, logging.handlers
 
 DEPLOY = 'LOCAL' # 'LOCAL' or 'PRODUCTION'
 
@@ -102,7 +102,7 @@ BUZZ_REDIS_PORT  = 6379
 
 
 logger = logging.getLogger('buzzfire')
-handler = logging.TimedRotatingFileHandler(filename='logs/buzz_fire.log', when='D', interval=1)
+handler = logging.handlers.TimedRotatingFileHandler(filename='logs/buzz_fire.log', when='D', interval=1)
 formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
 handler.setFormatter(formatter)
 logger.addHandler(handler)
