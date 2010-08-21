@@ -183,11 +183,14 @@ My Buzz!
             	if (data[tweet].text.match(shortlinks_re)) {
 		    var tweetlink = data[tweet].text.match(shortlinks_re);
 		    var linkcode = '<a href="' + tweetlink[0] + '" target="_blank">' + tweetlink[0] + '</a>';
-		    data[tweet].text = data[tweet].text.replace(shortlinks_re, linkcode);
+		    var linked_tweet  = data[tweet].text.replace(shortlinks_re, linkcode);
+		}
+		else {
+		    var linked_tweet = data[tweet].text;
 		}
                 // append tweet
 		            
-                $('#mybuzz_timeline').append('<div class="tweet_result"><div class="tweet">' + data[tweet].text +
+                $('#mybuzz_timeline').append('<div class="tweet_result"><div class="tweet">' + linked_tweet +
                 '</div>' +
                 '<div class="tweet_info">' + 
                 '<div class="fleft"><img src="{{ MEDIA_URL }}images/user_ico.gif"></div>' +
