@@ -148,6 +148,14 @@ div#infobox {
     top: 240px;
 }
 
+div#ponybox {
+	width:210px;
+	height: 65px;
+	position: absolute;
+	left: -40px;
+	top: 420px;
+}
+
 .borderradius div#infobox {
     background-color: #333;
     color: #fff;
