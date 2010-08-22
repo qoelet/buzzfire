@@ -27,7 +27,7 @@ My Buzz!
         <a id="new_search" class="tooltip" title="Search Twitter!"><img src="{{ MEDIA_URL }}images/my_search_off.gif"></a>
     </h2>
     <h2 class="fleft">
-	<a id="write_tweet" class="tooltip" title="Write a tweet!">Tweet!</a>
+		<a id="write_tweet" class="tooltip" title="Write a tweet!"><img src="{{ MEDIA_URL }}images/tweet_off.gif"></a>
     </h2>
     <div class="clear"></div>
     <div id="mybuzz_timeline">
@@ -59,18 +59,19 @@ My Buzz!
 
     // tweet!
     $('#write_tweet').click(function() {
-	$('#mybuzz_timeline').fadeOut('fast').empty();
+		$('#mybuzz_timeline').fadeOut('fast').empty();
 
     	// dim other links
         $('#view_latest_tweets img').attr('src','{{ MEDIA_URL }}images/latest_tweets_off.gif');
         $('#view_bookmarks img').attr('src','{{ MEDIA_URL }}images/my_bookmarks_off.gif');
         $('#new_search img').attr('src','{{ MEDIA_URL }}images/my_search_off.gif');
+		$('#write_tweet img').attr('src', '{{ MEDIA_URL }}images/tweet.gif');
 
-	// add tweet box
-	$('#mybuzz_timeline').append('<div id="tbox"></div>').fadeIn('slow');
-  	twttr.anywhere(function (T) {
-    	    T("#tbox").tweetBox();
-  	});
+		// add tweet box
+		$('#mybuzz_timeline').append('<div id="tbox"></div>').fadeIn('slow');
+	  		twttr.anywhere(function (T) {
+	    	    T("#tbox").tweetBox();
+	  	});
     });
     
     // refresh data
@@ -82,6 +83,7 @@ My Buzz!
         $('#view_latest_tweets img').attr('src','{{ MEDIA_URL }}images/latest_tweets.gif');
         $('#view_bookmarks img').attr('src','{{ MEDIA_URL }}images/my_bookmarks_off.gif');
         $('#new_search img').attr('src','{{ MEDIA_URL }}images/my_search_off.gif');
+		$('#write_tweet img').attr('src', '{{ MEDIA_URL }}images/tweet_off.gif');
         
         refresh_data();
     });
@@ -95,6 +97,7 @@ My Buzz!
         $('#view_latest_tweets img').attr('src','{{ MEDIA_URL }}images/latest_tweets_off.gif');
         $('#view_bookmarks img').attr('src','{{ MEDIA_URL }}images/my_bookmarks.gif');
         $('#new_search img').attr('src','{{ MEDIA_URL }}images/my_search_off.gif');
+		$('#write_tweet img').attr('src', '{{ MEDIA_URL }}images/tweet_off.gif');
         
         get_bookmarks();
     });
@@ -108,6 +111,7 @@ My Buzz!
         $('#view_latest_tweets img').attr('src','{{ MEDIA_URL }}images/latest_tweets_off.gif');
         $('#view_bookmarks img').attr('src','{{ MEDIA_URL }}images/my_bookmarks_off.gif');
         $('#new_search img').attr('src','{{ MEDIA_URL }}images/my_search.gif');
+		$('#write_tweet img').attr('src', '{{ MEDIA_URL }}images/tweet_off.gif');
         
         // re-attach handlers
         $('#searchbutton').hover(function() {
@@ -134,7 +138,7 @@ My Buzz!
                            var bookmark_id = 'bookmark_' + tweet;
                            var that = this;
 
-			   var linked_tweet = makelinks(data['results'][tweet].text);
+						   var linked_tweet = makelinks(data['results'][tweet].text);
 
                            // append tweet
 
@@ -171,9 +175,9 @@ My Buzz!
                            
                            add_handler(bookmark_id, form_id);
                        }
-			twttr.anywhere(function(twitter) {
-		              twitter.hovercards();
-     				});
+					twttr.anywhere(function(twitter) {
+						twitter.hovercards();
+					});
 
                    });
                }
@@ -190,7 +194,7 @@ My Buzz!
                 var bookmark_id = 'bookmark_' + tweet;
                 var that = this;
 
-           	var linked_tweet = makelinks(data[tweet].text);
+           		var linked_tweet = makelinks(data[tweet].text);
                 // append tweet
 		            
                 $('#mybuzz_timeline').append('<div class="tweet_result"><div class="tweet">' + linked_tweet +
@@ -227,9 +231,9 @@ My Buzz!
                 
                 add_handler(bookmark_id, form_id);
             }
-	twttr.anywhere(function(twitter) {
-              twitter.hovercards();
-	     });
+			twttr.anywhere(function(twitter) {
+            	twitter.hovercards();
+	     	});
         });
 	
     }
@@ -243,7 +247,7 @@ My Buzz!
                 var form_id = 'del_form_' + tweet;
                 var bookmark_id = 'bookmark_' + data[tweet].bookmark.id;
 		
-		var linked_tweet = makelinks(data[tweet].bookmark.tweet_txt);
+				var linked_tweet = makelinks(data[tweet].bookmark.tweet_txt);
                 var bookmark = $('#mybuzz_timeline').append('<div class="tweet_result"><div class="tweet">' + linked_tweet  +
                 '</div>' +
                 '<div class="tweet_info">' + 
@@ -251,7 +255,8 @@ My Buzz!
                 '<div class="fleft padbottom">' + data[tweet].bookmark.tweeter_screenname + '</div>' +
 				'<div class="fleft padright"><a id="del_' + bookmark_id  + '"><img src=\"{{ MEDIA_URL }}images/delete_ico.png\"></a></div>' + 
                 '<div class="fleft padbottom red">delete me? :(</div>' +
-		'<div class="fleft padright"><a id="rt_' + bookmark_id + '">retweet me?</a></div>' + 
+				'<div class="fleft padright"><a id="rt_' + bookmark_id + '"><img src="{{ MEDIA_URL}}images/retweet.png"></a></div>' + 
+				'<div class="fleft padbottom red">retweet me?</div>' + 
 				'<form id="' + form_id + '"' + ' method="post">' +
                 '<input type="hidden" name="bookmark_id" value="' + data[tweet].bookmark.id + '">' +
                 '</form>' +
@@ -299,23 +304,30 @@ My Buzz!
                     });
                 }
 				
-		delete_handler(bookmark_id);
+				delete_handler(bookmark_id);
 
 
-		function retweet_handler(bookmark_id, tweet) {
-		    $('#rt_' + bookmark_id).click(function() {
-                        function hideRT() {
-                            $('#tbox_' + bookmark_id).fadeOut();
-                        }
-		        twttr.anywhere(function (T) {
-			    T("#tbox_"+ bookmark_id).tweetBox({
-                                defaultContent: tweet,
-                                onTweet: hideRT,
-                                label: "Retweet bookmark!"
-                            });
-                         });
-		    });
-		}
+				function retweet_handler(bookmark_id, tweet) {
+				    $('#rt_' + bookmark_id).click(function() {
+		            	function hideRT() {
+		                	$('#tbox_' + bookmark_id).fadeOut();
+		                }
+				        twttr.anywhere(function (T) {
+					    	T("#tbox_"+ bookmark_id).tweetBox({
+		                    	defaultContent: tweet,
+		                    	onTweet: hideRT,
+		                		label: "Retweet bookmark!"
+		                	});
+		                });
+				    });
+				
+					// hover
+					$('#rt_' + bookmark_id).hover(function() {
+						$('#rt_' + bookmark_id + ' img').attr('src','{{ MEDIA_URL }}images/retweet_on.png');
+					}, function() {
+						$('#rt_' + bookmark_id + ' img').attr('src','{{ MEDIA_URL }}images/retweet.png');
+					});
+				}
                 retweet_handler(bookmark_id, data[tweet].bookmark.tweet_txt);
             }
 
