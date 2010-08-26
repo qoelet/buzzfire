@@ -60,7 +60,7 @@ bookmark and rank your favorite tweets today!
                 var bookmark_id = 'bookmark_' + tweet;
                 var that = this;
 
-		var linked_tweet = makelinks(data[tweet].bookmark.tweet_txt);
+				var linked_tweet = makelinks(data[tweet].bookmark.tweet_txt);
 
 				// append tweet
 				$('#top_tweets_results').append('<div class="tweet_result"><div class="tweet">' + linked_tweet +
@@ -68,7 +68,7 @@ bookmark and rank your favorite tweets today!
                 '<div class="tweet_info">' + 
                 '<div class="fleft"><img src="{{ MEDIA_URL }}images/user_ico.gif"></div>' +
                 '<div class="fleft padbottom">' + data[tweet].bookmark.tweeter_screenname + '</div>' + 
-				'<div class="fleft padright"><a id="like_' + bookmark_id  + '"><img src=\"{{ MEDIA_URL }}images/bookmark_ico.png\"></a></div>' + 
+				'<div class="fleft padright"><a id="like_' + bookmark_id  + '"><img src=\"{{ MEDIA_URL }}images/like_ico.gif"></a></div>' + 
                 '<div class="fleft padbottom red">like me!</div>' +
                 '<div class="fleft padright"><a id="' + bookmark_id  + '"><img src=\"{{ MEDIA_URL }}images/bookmark_ico.png\"></a></div>' + 
                 '<div class="fleft padbottom red">bookmark me!</div>' +
@@ -147,6 +147,41 @@ bookmark and rank your favorite tweets today!
 	});
 	
 	function toptweets() {
+		function add_handler(bookmark_id, form_id) {
+            // add post handler
+            $('#' + bookmark_id).click(function(){
+                $.post('{% url mybuzz_add_bookmark %}', $("#" + form_id).serialize(), function(data) {
+                    alert('bookmark saved!');
+                });
+            });
+
+            // hover 
+            $('#' + bookmark_id).hover(function(){
+                $('#' + bookmark_id + ' img').attr('src','{{ MEDIA_URL }}images/bookmark_on_ico.png');
+            }, function() {
+                $('#' + bookmark_id + ' img').attr('src','{{ MEDIA_URL }}images/bookmark_ico.png');
+            });
+        }
+
+		function like_handler(bookmark_id, form_id) {
+            // add post handler
+            $('#like_' + bookmark_id).click(function(){
+                var post_url = '/bookmark/like/';
+                post_url += data[tweet].bookmark.id;
+                $.post(post_url, $("#" + form_id).serialize(), function(data) {
+                    alert('like saved');
+                    // remove like link
+                });
+            });
+            
+            // hover 
+            $('#' + bookmark_id).hover(function(){
+                $('#' + bookmark_id + ' img').attr('src','{{ MEDIA_URL }}images/like_on_ico.gif');
+            }, function() {
+                $('#' + bookmark_id + ' img').attr('src','{{ MEDIA_URL }}images/like_ico.gif');
+            });
+        }
+
 		$.getJSON(gettoptweets_url, function(data) {
 			for(tweet in data) {
 				var form1_id = 'bookmark_form_' + tweet;
@@ -154,7 +189,7 @@ bookmark and rank your favorite tweets today!
                 var bookmark_id = 'bookmark_' + tweet;
                 var that = this;
 
-		var linked_tweet = makelinks(data[tweet].bookmark.tweet_txt);
+				var linked_tweet = makelinks(data[tweet].bookmark.tweet_txt);
 				
 				// append tweet
 				$('#top_tweets_results').append('<div class="tweet_result"><div class="tweet">' + linked_tweet +
@@ -176,41 +211,6 @@ bookmark and rank your favorite tweets today!
                 '</form>' +
                 '<div class="clear"></div>'  + 
                 '</div></div>').fadeIn('slow');
-
-                function add_handler(bookmark_id, form_id) {
-                    // add post handler
-                    $('#' + bookmark_id).click(function(){
-                        $.post('{% url mybuzz_add_bookmark %}', $("#" + form_id).serialize(), function(data) {
-                            alert('bookmark saved!');
-                        });
-                    });
-
-                    // hover 
-                    $('#' + bookmark_id).hover(function(){
-                        $('#' + bookmark_id + ' img').attr('src','{{ MEDIA_URL }}images/bookmark_on_ico.png');
-                    }, function() {
-                        $('#' + bookmark_id + ' img').attr('src','{{ MEDIA_URL }}images/bookmark_ico.png');
-                    });
-                }
-
-				function like_handler(bookmark_id, form_id) {
-                    // add post handler
-                    $('#like_' + bookmark_id).click(function(){
-                        var post_url = '/bookmark/like/';
-                        post_url += data[tweet].bookmark.id;
-                        $.post(post_url, $("#" + form_id).serialize(), function(data) {
-                            alert('like saved');
-                            // remove like link
-                        });
-                    });
-                    
-                    // hover 
-                    $('#' + bookmark_id).hover(function(){
-                        $('#' + bookmark_id + ' img').attr('src','{{ MEDIA_URL }}images/like_on_ico.gif');
-                    }, function() {
-                        $('#' + bookmark_id + ' img').attr('src','{{ MEDIA_URL }}images/like_ico.gif');
-                    });
-                }
                 
                 like_handler(bookmark_id, form2_id);
 
@@ -241,7 +241,7 @@ bookmark and rank your favorite tweets today!
                     var bookmark_id = 'bookmark_' + tweet;
                     var that = this;
 
-		    var linked_tweet = makelinks(data['results'][tweet].text);
+		    		var linked_tweet = makelinks(data['results'][tweet].text);
 
                     // append tweet
 
